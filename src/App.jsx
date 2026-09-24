@@ -648,12 +648,23 @@ export default function App() {
               <Plus size={16} />
               <span className="hidden sm:inline">Tambah saham</span>
             </button>
-            <button type="button" onClick={() => setHistoryOpen((open) => !open)} className="action-btn-secondary" title="Lihat riwayat">
-              <History size={16} />
-              <span>{historyOpen ? "Sembunyikan" : "Tampilkan"} riwayat ({history.length})</span>
-            </button>
           </div>
         </div>
+
+        <div className="history-toggle-row">
+          <button type="button" onClick={() => setHistoryOpen((open) => !open)} className="action-btn-secondary" aria-expanded={historyOpen} aria-controls="calculation-history-panel">
+            <History size={16} />
+            <span>{historyOpen ? "Sembunyikan" : "Tampilkan"} riwayat ({history.length})</span>
+          </button>
+        </div>
+        {historyOpen && <div id="calculation-history-panel"><HistoryPanel history={history} onOpen={openHistoryCalculation} onDelete={async (id) => {
+          const { error } = await supabase.from("calculation_history").delete().eq("id", id).eq("user_id", session.user.id);
+          if (error) {
+            setHistoryNotice(`Gagal menghapus riwayat: ${error.message}`);
+            return;
+          }
+          removeHistorySnapshot(id);
+        }} /></div>}
 
         <section className="workspace-tools card" aria-labelledby="workspace-tools-title">
           <div className="workspace-tools-heading">
@@ -806,15 +817,6 @@ export default function App() {
             </label>
           </section>
         )}
-
-        {historyOpen && <HistoryPanel history={history} onOpen={openHistoryCalculation} onDelete={async (id) => {
-          const { error } = await supabase.from("calculation_history").delete().eq("id", id).eq("user_id", session.user.id);
-          if (error) {
-            setHistoryNotice(`Gagal menghapus riwayat: ${error.message}`);
-            return;
-          }
-          removeHistorySnapshot(id);
-        }} />}
 
         {!activeStock ? (
           <div className="card p-8 text-center">

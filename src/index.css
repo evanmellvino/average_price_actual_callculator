@@ -1311,6 +1311,20 @@ body {
   border-top: 3px solid var(--text-blue);
 }
 
+.history-toggle-row {
+  display: flex;
+  justify-content: flex-start;
+  margin: 0.35rem 0;
+}
+
+#calculation-history-panel {
+  margin-bottom: 0.6rem;
+}
+
+#calculation-history-panel .history-panel {
+  margin: 0;
+}
+
 .history-heading,
 .history-item,
 .history-item-title,
