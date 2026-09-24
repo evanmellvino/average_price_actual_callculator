@@ -15,6 +15,9 @@ import "./index.css";
 
 export default function App() {
   const [session, setSession] = useState(null);
+  const [passwordRecovery, setPasswordRecovery] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [recoveryBusy, setRecoveryBusy] = useState(false);
   const [authReady, setAuthReady] = useState(!hasSupabaseConfig);
   const [authNotice, setAuthNotice] = useState("");
   const [loadedUserId, setLoadedUserId] = useState(null);
@@ -62,9 +65,10 @@ export default function App() {
       setAuthReady(true);
       if (!data.session) setLoadedUserId(null);
     });
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+    const { data: listener } = supabase.auth.onAuthStateChange((event, nextSession) => {
       setSession(nextSession);
       setAuthReady(true);
+      if (event === "PASSWORD_RECOVERY") setPasswordRecovery(true);
       if (!nextSession) setLoadedUserId(null);
       if (!nextSession) {
         clearUserData();
@@ -365,6 +369,19 @@ export default function App() {
     if (error) setAuthNotice(error.message);
   };
 
+  const handlePasswordUpdate = async (event) => {
+    event.preventDefault();
+    setRecoveryBusy(true);
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    setRecoveryBusy(false);
+    if (error) setAuthNotice(error.message);
+    else {
+      setAuthNotice("Password berhasil diperbarui.");
+      setPasswordRecovery(false);
+      setNewPassword("");
+    }
+  };
+
   if (!authReady) {
     return <main className="auth-page"><div className="auth-loading">Memeriksa sesi akun...</div></main>;
   }
@@ -382,6 +399,23 @@ export default function App() {
   }
   if (!session) {
     return <AuthScreen supabase={supabase} notice={authNotice} onDismissNotice={() => setAuthNotice("")} />;
+  }
+  if (passwordRecovery) {
+    return (
+      <main className="auth-page">
+        <section className="auth-card">
+          <div className="auth-brand-icon"><Calculator size={25} /></div>
+          <h1>Buat password baru</h1>
+          <p className="auth-description">Masukkan password baru untuk akun Anda.</p>
+          <form className="auth-form" onSubmit={handlePasswordUpdate}>
+            <label className="auth-label" htmlFor="recovery-password">Password baru</label>
+            <input id="recovery-password" className="input-field" type="password" minLength={8} required value={newPassword} onChange={(event) => setNewPassword(event.target.value)} autoComplete="new-password" />
+            {authNotice && <p className="auth-message" role="status">{authNotice}</p>}
+            <button className="action-btn auth-submit" type="submit" disabled={recoveryBusy}>{recoveryBusy ? "Memperbarui..." : "Simpan password baru"}</button>
+          </form>
+        </section>
+      </main>
+    );
   }
   if (!session || loadedUserId !== session.user.id) {
     return <main className="auth-page"><div className="auth-loading">Memuat data akun...</div></main>;
