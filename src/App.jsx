@@ -646,7 +646,7 @@ export default function App() {
           <div className="stock-tabs-actions">
             <button type="button" onClick={addStock} className="action-btn" title="Add new stock">
               <Plus size={16} />
-              <span className="hidden sm:inline">Tambah saham</span>
+              <span>Tambah saham</span>
             </button>
           </div>
         </div>
