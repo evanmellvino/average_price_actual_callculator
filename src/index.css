@@ -451,7 +451,7 @@ body {
 /* === Section === */
 .section-title {
   @apply text-lg font-bold flex items-center gap-2 mb-4;
-  color: var(--text);
+  color: var(--text-accent) !important;
 }
 
 .optional-label {
