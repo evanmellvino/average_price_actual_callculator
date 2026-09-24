@@ -105,15 +105,23 @@ export default function App() {
       if (cloudStocks.length === 0 && localStocks.length > 0) {
         const { error: importError } = await supabase.from("user_stocks").upsert(
           localStocks.map((stock) => ({
-            id: stock.id,
+            id: globalThis.crypto?.randomUUID?.(),
             user_id: session.user.id,
             name: stock.name,
             data: { ...stock, id: undefined, name: undefined },
             updated_at: new Date().toISOString(),
           })),
-          { onConflict: "id" },
         );
         if (importError) setAuthNotice(`Gagal memindahkan data lokal ke akun: ${importError.message}`);
+        else {
+          const { data: importedStocks } = await supabase.from("user_stocks").select("id,name,data,created_at,updated_at").eq("user_id", session.user.id);
+          if (importedStocks) {
+            replaceUserData({
+              stocks: importedStocks.map((row) => ({ ...row.data, id: row.id, name: row.name })),
+              history: cloudHistory,
+            });
+          }
+        }
       }
     if (cloudHistory.length === 0 && localHistory.length > 0) {
         const { error: importHistoryError } = await supabase.from("calculation_history").insert(

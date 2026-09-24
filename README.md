@@ -1,16 +1,22 @@
-# React + Vite
+# Average Price Calculator
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Kalkulator harga wajar saham berbasis PER dan PBV dengan akun Supabase, penyimpanan saham dan riwayat.
 
-Currently, two official plugins are available:
+## Development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```sh
+npm install
+npm run dev
+```
 
-## React Compiler
+Copy `.env.example` to `.env.local` and set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`. Create the database tables and row-level security policies by running `supabase/schema.sql` in the Supabase SQL Editor.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Production deployment (Vercel)
 
-## Expanding the Oxlint configuration
+- Build command: `npm run build`
+- Output directory: `dist`
+- Add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` under Vercel project environment variables for Production, Preview, and Development as needed.
+- In Supabase Authentication URL Configuration, add the deployed site URL to Site URL and Redirect URLs.
+- `vercel.json` configures SPA route fallback and the service worker response headers.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+Never put the Supabase `service_role` key in the browser app or in a `VITE_` variable.
