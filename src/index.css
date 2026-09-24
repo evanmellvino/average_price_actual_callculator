@@ -276,19 +276,35 @@ body {
 
 /* === Select === */
 .select-field {
-  @apply w-full rounded-lg px-3 py-2 text-sm appearance-none bg-no-repeat bg-right transition-all duration-200;
+  display: block;
+  width: 100%;
+  min-height: 2.75rem;
+  border-radius: 0.625rem;
+  padding: 0.65rem 2.75rem 0.65rem 0.85rem;
+  font-size: 0.875rem;
+  line-height: 1.35;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
   background: var(--input-bg);
   border: 1px solid var(--input-border);
   color: var(--text);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3af' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
   background-position: right 0.75rem center;
-  padding-right: 2.5rem;
+  background-size: 1rem;
+  cursor: pointer;
+}
+
+.select-field::-ms-expand {
+  display: none;
 }
 
 .select-field:focus {
-  @apply outline-none ring-2;
+  outline: none;
   border-color: var(--input-focus);
-  ring-color: var(--input-focus);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--input-focus) 28%, transparent);
 }
 
 /* === Unit Switch === */
