@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Segoe UI", Roboto, "Helvetica Neue", Arial, ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
@@ -86,11 +86,27 @@ body {
 
 /* === Layout utilities === */
 .container-main {
-  @apply max-w-7xl mx-auto px-4 py-8 space-y-8;
+  @apply max-w-7xl mx-auto px-4 py-8;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .grid-form-results {
-  @apply grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)];
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  align-items: start;
+  gap: 1.5rem;
+}
+
+.grid-form-results > div {
+  min-width: 0;
+}
+
+.grid-form-results > div:first-child {
+  display: grid;
+  align-content: start;
+  gap: 1.15rem;
 }
 
 /* === Header === */
@@ -195,7 +211,10 @@ body {
 
 /* === Form === */
 .field-wrap {
-  @apply space-y-2;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.55rem;
 }
 
 .field-label-row {
@@ -203,8 +222,13 @@ body {
 }
 
 .input-label {
-  @apply text-sm font-medium block;
+  @apply text-sm font-semibold block;
   color: var(--text-accent);
+  line-height: 1.35;
+}
+
+.field-label-row {
+  min-height: 1.35rem;
 }
 
 .tooltip-wrap {
@@ -236,10 +260,16 @@ body {
 
 .field-control {
   @apply relative;
+  min-width: 0;
 }
 
 .input-field {
   @apply w-full rounded-lg px-3 py-2 text-sm transition-all duration-200;
+  min-height: 2.8rem;
+  font-family: inherit;
+  font-weight: 550;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
   background: var(--input-bg);
   border: 1px solid var(--input-border);
   color: var(--text);
@@ -253,6 +283,10 @@ body {
   @apply outline-none ring-2;
   border-color: var(--input-focus);
   ring-color: var(--input-focus);
+}
+
+.input-field:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--input-focus) 24%, transparent);
 }
 
 .input-field.has-error {
@@ -1069,7 +1103,7 @@ body {
   .container-main {
     width: 100%;
     padding: 1rem 0.875rem 1.5rem;
-    gap: 1rem;
+    gap: 1.15rem;
   }
 
   .header-inner {
@@ -1169,7 +1203,7 @@ body {
 
   .grid-form-results {
     grid-template-columns: minmax(0, 1fr);
-    gap: 1rem;
+    gap: 1.15rem;
   }
 
   .grid-form-results > div {
@@ -1192,7 +1226,8 @@ body {
   }
 
   .grid-form-results .grid {
-    gap: 0.85rem;
+    row-gap: 1rem;
+    column-gap: 0.85rem;
   }
 
   .input-field,
@@ -1206,8 +1241,9 @@ body {
     font-size: 0.68rem;
   }
 
-  .field-wrap {
+.field-wrap {
     min-width: 0;
+    gap: 0.5rem;
   }
 
   .unit-btn {
@@ -1407,6 +1443,10 @@ body {
   }
 }
 
+.grid-form-results .field-wrap {
+  padding: 0.1rem;
+}
+
 /* === Stock Tabs === */
 .stock-tabs {
   @apply flex items-center gap-3 pb-2 mb-6;
@@ -1536,6 +1576,13 @@ body {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-accent);
+}
+
+@media (min-width: 641px) and (max-width: 1023px) {
+  .grid-form-results {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.25rem;
+  }
 }
 
 @media print {
