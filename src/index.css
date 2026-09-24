@@ -928,6 +928,10 @@ body {
   gap: 0.5rem;
 }
 
+.stock-tabs-no-names .tabs-scroll {
+  display: none;
+}
+
 .workspace-tools {
   margin: 0 0 1rem;
   border-top: 3px solid var(--text-accent);

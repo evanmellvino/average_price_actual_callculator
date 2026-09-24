@@ -42,6 +42,7 @@ export default function App() {
   const updateStockPbv = useStore((s) => s.updateStockPbv);
   const updateStockCustomPbv = useStore((s) => s.updateStockCustomPbv);
   const watchlist = stocks.filter((stock) => stock.isWatched);
+  const namedStocks = stocks.filter((stock) => stock.name.trim());
 
   // Local state
   const [shareMessage, setShareMessage] = useState("");
@@ -588,9 +589,9 @@ export default function App() {
 
         {/* Stock Tabs */}
         {authNotice && <p className="auth-notice global-auth-notice" role="status">{authNotice}</p>}
-        <div className="stock-tabs">
+        <div className={`stock-tabs ${namedStocks.length === 0 ? "stock-tabs-no-names" : ""}`}>
           <div className="tabs-scroll">
-            {stocks.filter((stock) => stock.name.trim()).map((stock) => (
+            {namedStocks.map((stock) => (
               <div key={stock.id} className={`stock-tab ${activeStockId === stock.id ? "active" : ""}`}>
                 <button
                   type="button"
