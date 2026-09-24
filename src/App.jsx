@@ -480,7 +480,7 @@ export default function App() {
         <section className="page-intro">
           <div>
             <p className="page-kicker">WORKSPACE INVESTASI</p>
-            <h2>Analisis harga wajar</h2>
+            <h2>Temukan harga wajar, <span>lebih terukur.</span></h2>
             <p>Hitung estimasi nilai saham dengan pendekatan PER dan PBV.</p>
           </div>
           <button type="button" className="action-btn-secondary signout-btn" onClick={handleSignOut}>Keluar akun</button>
@@ -611,7 +611,7 @@ export default function App() {
             <div>
               {/* Step 1: Laba */}
               <section className="card">
-                <h2 className="section-title">
+                  <h2 className="section-title">
                   <TrendingUp size={18} />
                   1. Data fundamental
                 </h2>

@@ -171,6 +171,11 @@ body {
   letter-spacing: -0.035em;
 }
 
+.page-intro h2 span,
+.section-title {
+  color: var(--text-accent);
+}
+
 .page-intro p:last-child {
   margin: 0.45rem 0 0;
   color: var(--text-muted);
@@ -680,7 +685,7 @@ body {
 
 .chart-title {
   @apply text-lg font-bold;
-  color: var(--text);
+  color: var(--text-accent);
 }
 
 .chart-subtitle,
@@ -767,7 +772,7 @@ body {
 
 .summary-eyebrow {
   margin: 0 0 0.35rem;
-  color: var(--text-muted);
+  color: var(--text-accent);
   font-size: 0.67rem;
   font-weight: 800;
   letter-spacing: 0.12em;
