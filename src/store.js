@@ -34,6 +34,7 @@ export const useStore = create(
           pbv: 1,
           customPbv: "",
           thesis: "",
+          watchlistReason: "",
           isWatched: false,
           createdAt: new Date().toISOString(),
         };
@@ -181,6 +182,7 @@ export const useStore = create(
           customPbv: stock.customPbv ?? "",
           unit: stock.unit ?? "miliar",
           thesis: stock.thesis ?? "",
+          watchlistReason: stock.watchlistReason ?? "",
           isWatched: stock.isWatched ?? false,
         })),
         history: persistedState?.history ?? [],

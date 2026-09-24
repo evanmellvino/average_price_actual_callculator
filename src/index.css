@@ -955,23 +955,45 @@ body {
   font-weight: 750;
 }
 
-.thesis-field {
-  display: grid;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
-.thesis-input {
-  min-height: 6.5rem;
-  resize: vertical;
-  line-height: 1.5;
-}
-
-
 .thesis-counter {
   justify-self: end;
   color: var(--text-muted);
   font-size: 0.7rem;
+}
+
+.watchlist-reason-modal h2 {
+  margin: 0;
+  color: var(--text);
+  font-size: 1.15rem;
+}
+
+.watchlist-reason-modal > .section-subtitle {
+  margin: 0.5rem 0 1rem;
+  line-height: 1.5;
+}
+
+.watchlist-reason-field {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.watchlist-reason-textarea {
+  min-height: 6rem;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.watchlist-reason {
+  display: -webkit-box;
+  width: 100%;
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 500 !important;
+  line-height: 1.4;
+  white-space: normal;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .watchlist-row {

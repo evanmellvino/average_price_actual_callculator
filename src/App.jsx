@@ -57,6 +57,8 @@ export default function App() {
   const [scenarioPbv, setScenarioPbv] = useState("");
   const [scenarioGrowth, setScenarioGrowth] = useState("0");
   const [calculationNotice, setCalculationNotice] = useState("");
+  const [watchlistReasonOpen, setWatchlistReasonOpen] = useState(false);
+  const [watchlistReason, setWatchlistReason] = useState("");
   const lastHistorySignature = useRef("");
 
   useEffect(() => {
@@ -283,7 +285,21 @@ export default function App() {
   const currentPrice = activeStock ? parseNumber(activeStock.form.hargaSaham) || 0 : 0;
   const toggleWatchlist = () => {
     if (!activeStock) return;
-    updateStock(activeStockId, { isWatched: !activeStock.isWatched });
+    if (activeStock.isWatched) {
+      updateStock(activeStockId, { isWatched: false });
+      return;
+    }
+    setWatchlistReason(activeStock.watchlistReason ?? "");
+    setWatchlistReasonOpen(true);
+  };
+
+  const saveWatchlistReason = () => {
+    if (!activeStock) return;
+    updateStock(activeStockId, {
+      isWatched: true,
+      watchlistReason: watchlistReason.trim(),
+    });
+    setWatchlistReasonOpen(false);
   };
   const saveActiveHistory = useCallback(() => {
     if (!activeStock || !scenarios[0]) return false;
@@ -637,7 +653,7 @@ export default function App() {
           <div className="workspace-tools-heading">
             <div>
               <p className="summary-eyebrow">RISET PERSONAL</p>
-              <h2 id="workspace-tools-title" className="workspace-tools-title">Watchlist & tesis</h2>
+          <h2 id="workspace-tools-title" className="workspace-tools-title">Watchlist</h2>
             </div>
             <button
               type="button"
@@ -649,19 +665,6 @@ export default function App() {
               {activeStock?.isWatched ? "Di watchlist" : "Tambahkan ke watchlist"}
             </button>
           </div>
-          {activeStock && (
-          <label className="thesis-field">
-              <span className="input-label">Tesis investasi · tersimpan pada saham ini</span>
-              <textarea
-                className="input-field thesis-input"
-                value={activeStock.thesis ?? ""}
-                onChange={(event) => updateStock(activeStockId, { thesis: event.target.value })}
-                maxLength={2000}
-                placeholder="Apa alasan utama memantau saham ini? Catat katalis, risiko, dan kondisi yang membatalkan tesis…"
-              />
-              <span className="thesis-counter">{(activeStock.thesis ?? "").length}/2000</span>
-            </label>
-          )}
           <div className="watchlist-row">
             <div className="watchlist-heading-row">
               <div>
@@ -691,6 +694,7 @@ export default function App() {
                     onClick={() => openStockCalculation(stock.id)}
                   >
                     <span>{stock.name}</span>
+                    {stock.watchlistReason && <span className="watchlist-reason">Alasan: {stock.watchlistReason}</span>}
                     <span className="watchlist-price-details">
                       <span>Harga sekarang <strong>{parseNumber(stock.form?.hargaSaham) > 0 ? formatCurrency(parseNumber(stock.form.hargaSaham)) : "Belum diisi"}</strong></span>
                       <span>Harga aktual <strong>{(() => {
@@ -749,6 +753,32 @@ export default function App() {
             ))}
           </div>
         </section>
+
+        {watchlistReasonOpen && activeStock && (
+          <div className="modal-overlay" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && setWatchlistReasonOpen(false)}>
+            <section className="modal-content watchlist-reason-modal" role="dialog" aria-modal="true" aria-labelledby="watchlist-reason-title">
+              <p className="summary-eyebrow">WATCHLIST</p>
+              <h2 id="watchlist-reason-title">Kenapa memasukkan {activeStock.name}?</h2>
+              <p className="section-subtitle">Catat alasan singkat agar Anda ingat apa yang ingin dipantau. Boleh dikosongkan.</p>
+              <label className="watchlist-reason-field">
+                <span className="input-label">Alasan dipantau</span>
+                <textarea
+                  className="input-field watchlist-reason-textarea"
+                  value={watchlistReason}
+                  onChange={(event) => setWatchlistReason(event.target.value)}
+                  maxLength={500}
+                  placeholder="Contoh: valuasi terlihat menarik, menunggu laporan kuartal berikutnya…"
+                  autoFocus
+                />
+                <span className="thesis-counter">{watchlistReason.length}/500</span>
+              </label>
+              <div className="modal-actions">
+                <button type="button" className="action-btn" onClick={saveWatchlistReason}>Simpan ke watchlist</button>
+                <button type="button" className="action-btn-secondary" onClick={() => setWatchlistReasonOpen(false)}>Batal</button>
+              </div>
+            </section>
+          </div>
+        )}
 
         {activeStock && (
           <section className="card issuer-name-card">
