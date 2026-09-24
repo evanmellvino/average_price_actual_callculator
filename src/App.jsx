@@ -614,23 +614,6 @@ export default function App() {
           </div>
         </div>
 
-        {activeStock && (
-          <section className="card issuer-name-card">
-            <h2 className="section-title"><FileText size={18} /> Nama emiten</h2>
-            <label className="field-wrap">
-              <span className="input-label">Nama / kode saham</span>
-              <input
-                className="input-field"
-                type="text"
-                maxLength={80}
-                value={activeStock.name}
-                onChange={(event) => updateStock(activeStockId, { name: event.target.value })}
-                placeholder="Contoh: BBCA atau Bank Central Asia"
-              />
-            </label>
-          </section>
-        )}
-
         <section className="workspace-tools card" aria-labelledby="workspace-tools-title">
           <div className="workspace-tools-heading">
             <div>
@@ -747,6 +730,23 @@ export default function App() {
             ))}
           </div>
         </section>
+
+        {activeStock && (
+          <section className="card issuer-name-card">
+            <h2 className="section-title"><FileText size={18} /> Nama emiten</h2>
+            <label className="field-wrap">
+              <span className="input-label">Nama / kode saham</span>
+              <input
+                className="input-field"
+                type="text"
+                maxLength={80}
+                value={activeStock.name}
+                onChange={(event) => updateStock(activeStockId, { name: event.target.value })}
+                placeholder="Contoh: BBCA atau Bank Central Asia"
+              />
+            </label>
+          </section>
+        )}
 
         {historyOpen && <HistoryPanel history={history} onOpen={openHistoryCalculation} onDelete={async (id) => {
           const { error } = await supabase.from("calculation_history").delete().eq("id", id).eq("user_id", session.user.id);
