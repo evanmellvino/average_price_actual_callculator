@@ -963,6 +963,66 @@ body {
   line-height: 1.5;
 }
 
+.thesis-ai-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 0.25rem;
+}
+
+.thesis-ai-modal {
+  width: min(100%, 42rem);
+}
+
+.thesis-ai-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.thesis-ai-title-row .auth-brand-icon {
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+.thesis-ai-title-row h2 {
+  margin: 0;
+  color: var(--text);
+  font-size: 1.1rem;
+}
+
+.thesis-ai-result {
+  max-height: min(55vh, 32rem);
+  overflow: auto;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 0.8rem;
+  background: var(--page-elevated);
+  color: var(--text);
+  font-size: 0.88rem;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.thesis-ai-error {
+  padding: 0.75rem;
+  border: 1px solid var(--text-red);
+  border-radius: 0.7rem;
+  background: var(--danger);
+  color: var(--text-red);
+  font-size: 0.85rem;
+}
+
+.thesis-ai-disclaimer {
+  margin: 0.85rem 0;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
 .thesis-counter {
   justify-self: end;
   color: var(--text-muted);

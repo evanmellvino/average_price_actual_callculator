@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
-import { Calculator, RefreshCw, FileText, Sun, Moon, TrendingUp, Plus, Trash2, Copy, Share2, Download, HelpCircle, History, BookmarkPlus, ShieldCheck, Star, FlaskConical } from "lucide-react";
+import { Calculator, RefreshCw, FileText, Sun, Moon, TrendingUp, Plus, Trash2, Copy, Share2, Download, HelpCircle, History, BookmarkPlus, ShieldCheck, Star, FlaskConical, Sparkles } from "lucide-react";
 import { useStore } from "./store.js";
 import { EXAMPLE_DATA, parseNumber, validateForm, calculateScenarios, SECTOR_PRESETS } from "./calculator.js";
 import { generateShareURL, parseShareURL, copyToClipboard, exportAsPNG } from "./exportUtils.js";
@@ -59,6 +59,10 @@ export default function App() {
   const [scenarioPer, setScenarioPer] = useState("");
   const [scenarioPbv, setScenarioPbv] = useState("");
   const [scenarioGrowth, setScenarioGrowth] = useState("0");
+  const [thesisAiOpen, setThesisAiOpen] = useState(false);
+  const [thesisAiBusy, setThesisAiBusy] = useState(false);
+  const [thesisAiError, setThesisAiError] = useState("");
+  const [thesisAiResult, setThesisAiResult] = useState("");
 
   useEffect(() => {
     if (!hasSupabaseConfig) {
@@ -345,6 +349,50 @@ export default function App() {
       }
     : null;
 
+  const analyzeThesisWithAi = async () => {
+    if (!activeStock || !session?.access_token || thesisAiBusy) return;
+    setThesisAiBusy(true);
+    setThesisAiError("");
+    setThesisAiResult("");
+    try {
+      const response = await fetch("/api/analyze-thesis", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          stock: {
+            name: activeStock.name,
+            thesis: activeStock.thesis ?? "",
+            sector: selectedSector ? SECTOR_PRESETS[selectedSector]?.name : "",
+            currentPrice,
+            perAssumption: activeStock.per,
+            pbvAssumption: Number(activeStock.pbv) === 4 ? activeStock.customPbv : activeStock.pbv,
+            valuation: summaryScenario ? {
+              earningsLabel: summaryScenario.label,
+              eps: summaryScenario.eps,
+              bvps: summaryScenario.bvps,
+              fairValuePer: summaryScenario.fairValuePer,
+              fairValuePbv: summaryScenario.fairValuePbv,
+              averagePrice: summaryScenario.averagePrice,
+              mosPrice: summaryScenario.marginOfSafety,
+            } : null,
+          },
+        }),
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(payload.error || "Analisis AI gagal. Coba lagi nanti.");
+      setThesisAiResult(payload.analysis || "AI tidak mengembalikan analisis.");
+      setThesisAiOpen(true);
+    } catch (error) {
+      setThesisAiError(error.message || "Tidak dapat menghubungi layanan AI.");
+      setThesisAiOpen(true);
+    } finally {
+      setThesisAiBusy(false);
+    }
+  };
+
   const formatCurrency = (value) => new Intl.NumberFormat("id-ID", {
     style: "currency",
     currency: "IDR",
@@ -589,7 +637,7 @@ export default function App() {
             </button>
           </div>
           {activeStock && (
-            <label className="thesis-field">
+          <label className="thesis-field">
               <span className="input-label">Tesis investasi · tersimpan pada saham ini</span>
               <textarea
                 className="input-field thesis-input"
@@ -600,6 +648,15 @@ export default function App() {
               />
               <span className="thesis-counter">{(activeStock.thesis ?? "").length}/2000</span>
             </label>
+          )}
+          {activeStock && (
+            <div className="thesis-ai-actions">
+              <button type="button" className="action-btn" onClick={analyzeThesisWithAi} disabled={thesisAiBusy || !summaryScenario}>
+                <Sparkles size={16} />
+                {thesisAiBusy ? "Menganalisis tesis…" : "Bantu analisis dengan AI"}
+              </button>
+              <span className="section-subtitle">AI meninjau tesis dan angka yang Anda masukkan, bukan data pasar eksternal.</span>
+            </div>
           )}
           <div className="watchlist-row">
             <h3><Star size={15} /> Watchlist ({watchlist.length})</h3>
@@ -622,6 +679,28 @@ export default function App() {
             )}
           </div>
         </section>
+
+        {thesisAiOpen && (
+          <div className="modal-overlay" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && setThesisAiOpen(false)}>
+            <section className="modal-content thesis-ai-modal" role="dialog" aria-modal="true" aria-labelledby="thesis-ai-title">
+              <div className="thesis-ai-title-row">
+                <div className="auth-brand-icon"><Sparkles size={22} /></div>
+                <div>
+                  <p className="summary-eyebrow">AI THESIS REVIEW</p>
+                  <h2 id="thesis-ai-title">Analisis tesis · {activeStock?.name}</h2>
+                </div>
+              </div>
+              {thesisAiBusy ? <p className="auth-description" role="status">Meninjau tesis dan asumsi valuasi…</p> : null}
+              {thesisAiError && <p className="thesis-ai-error" role="alert">{thesisAiError}</p>}
+              {thesisAiResult && <div className="thesis-ai-result">{thesisAiResult}</div>}
+              <p className="thesis-ai-disclaimer">Analisis AI dapat keliru dan bukan rekomendasi investasi. Verifikasi semua fakta dan asumsi secara mandiri.</p>
+              <div className="modal-actions">
+                {thesisAiResult && <button type="button" className="action-btn-secondary" onClick={() => updateStock(activeStockId, { thesis: `${activeStock?.thesis ? `${activeStock.thesis}\n\n` : ""}${thesisAiResult}`.slice(0, 2000) })}>Tambahkan ke catatan</button>}
+                <button type="button" className="action-btn" onClick={() => setThesisAiOpen(false)}>Tutup</button>
+              </div>
+            </section>
+          </div>
+        )}
 
         {historyOpen && <HistoryPanel history={history} onDelete={async (id) => {
           const { error } = await supabase.from("calculation_history").delete().eq("id", id).eq("user_id", session.user.id);
