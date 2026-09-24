@@ -35,24 +35,24 @@ body {
   --card-hover: #192840;
   --text: #f1f5f9;
   --text-muted: #9aa9bd;
-  --text-accent: #4ade80;
-  --text-blue: #60a5fa;
+  --text-accent: #7dd3fc;
+  --text-blue: #a5b4fc;
   --text-amber: #fbbf24;
   --text-red: #fb7185;
   --border: #2b3b52;
   --input-bg: #0b1220;
   --input-border: #3a4c64;
-  --input-focus: #4ade80;
+  --input-focus: #7dd3fc;
   --header-bg: #0e1726;
-  --btn-primary: #16a34a;
-  --btn-primary-hover: #15803d;
+  --btn-primary: #2563eb;
+  --btn-primary-hover: #1d4ed8;
   --btn-secondary: #1d2a3d;
   --btn-secondary-hover: #293950;
-  --highlight: #173b34;
+  --highlight: #172f4d;
   --danger: #3b202b;
   --info: #1b2d48;
   --shadow: rgba(0, 0, 0, 0.28);
-  --chart-grid: #29364a;
+  --chart-grid: #293b55;
   --chart-cursor: rgba(148, 163, 184, 0.08);
 }
 
@@ -1018,7 +1018,7 @@ body {
 
 .auth-brand-name {
   margin: 0 0 0.55rem;
-  color: #4ade80;
+  color: #7dd3fc;
   font-size: 0.68rem;
   font-weight: 800;
   letter-spacing: 0.12em;
@@ -1115,7 +1115,7 @@ body {
 .auth-switch button {
   border: 0;
   background: transparent;
-  color: #4ade80;
+  color: #7dd3fc;
   font: inherit;
   font-weight: 700;
   cursor: pointer;
