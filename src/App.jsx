@@ -260,7 +260,7 @@ export default function App() {
   // Calculate active stock
   const { scenarios, errors, canCalculate } = useMemo(() => {
     if (!activeStock) return { scenarios: [], errors: {}, canCalculate: false };
-    const rawPbv = Number(activeStock.pbv);
+    const rawPbv = parseNumber(activeStock.pbv);
     const isSectorPbv = Object.values(SECTOR_PRESETS).some((preset) => preset.defaultPbv === rawPbv);
     const customPbvMode = rawPbv === 4 && !isSectorPbv;
     const validationPbvChoice = customPbvMode ? 4 : rawPbv;
@@ -276,7 +276,7 @@ export default function App() {
     const scenarios = calculateScenarios({
       form: activeStock.form,
       unit: activeStock.unit ?? "miliar",
-      per: Number(activeStock.per) || 10,
+      per: parseNumber(activeStock.per) || 10,
       pbvChoice: calculationPbv,
       customPbv: calculationCustomPbv,
     });
@@ -288,24 +288,26 @@ export default function App() {
     if (!activeStock) return;
     updateStock(activeStockId, { isWatched: !activeStock.isWatched });
   };
-  const handleCalculate = () => {
-    if (!canCalculate || !scenarios.length) {
-      setCalculationNotice("Periksa kembali data wajib dan asumsi valuasi yang belum valid.");
-      return;
-    }
-    setCalculationNotice("Valuasi berhasil dihitung. Hasil terlihat di panel sebelah.");
-    document.getElementById("results-container")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    window.setTimeout(() => setCalculationNotice(""), 4500);
-  };
   const saveActiveHistory = useCallback(() => {
-    if (!activeStock || !scenarios[0]) return;
+    if (!activeStock || !scenarios[0]) return false;
     const scenario = scenarios[0];
+    const createdAt = new Date().toISOString();
+    const existing = useStore.getState().history.find((item) =>
+      item.stockId === activeStock.id &&
+      item.scenarioLabel === scenario.label &&
+      item.averagePrice === scenario.averagePrice &&
+      item.currentPrice === currentPrice &&
+      item.per === scenario.per &&
+      item.pbv === scenario.pbv &&
+      Date.now() - new Date(item.createdAt).getTime() < 30_000
+    );
+    if (existing) return false;
     const localId = globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`;
     const snapshot = {
       id: localId,
       stockId: activeStock.id,
       stockName: activeStock.name,
-      createdAt: new Date().toISOString(),
+      createdAt,
       scenarioLabel: scenario.label,
       averagePrice: scenario.averagePrice,
       currentPrice,
@@ -332,9 +334,27 @@ export default function App() {
       });
     } else {
       setHistoryNotice("Hasil tersimpan lokal di perangkat ini.");
+      window.setTimeout(() => setHistoryNotice(""), 5000);
     }
     window.setTimeout(() => setHistoryNotice(""), 5000);
+    return true;
   }, [activeStock, scenarios, saveHistorySnapshot, currentPrice, session]);
+
+  const handleCalculate = () => {
+    if (!canCalculate || !scenarios.length) {
+      setCalculationNotice("Periksa kembali data wajib dan asumsi valuasi yang belum valid.");
+      return;
+    }
+    saveActiveHistory();
+    setCalculationNotice("Valuasi berhasil dihitung. Hasil terlihat di panel sebelah.");
+    document.getElementById("results-container")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    window.setTimeout(() => setCalculationNotice(""), 4500);
+  };
+  useEffect(() => {
+    if (!activeStock || !canCalculate || !scenarios.length || !session?.user?.id || loadedUserId !== session.user.id) return;
+    const timeout = window.setTimeout(() => saveActiveHistory(), 1800);
+    return () => window.clearTimeout(timeout);
+  }, [activeStock, canCalculate, scenarios, session?.user?.id, loadedUserId, saveActiveHistory]);
   const summaryScenario = scenarios[0];
   const scenarioResult = useMemo(() => {
     if (!summaryScenario) return null;
@@ -365,7 +385,7 @@ export default function App() {
 
   const watchlistComparisons = useMemo(() => watchlist.map((stock) => {
     const customPbvMode = Number(stock.pbv) === 4;
-    const rawPbv = Number(stock.pbv);
+    const rawPbv = parseNumber(stock.pbv);
     const pbvChoice = customPbvMode ? 4 : rawPbv;
     const customPbv = customPbvMode ? stock.customPbv : String(rawPbv);
     const stockScenarios = calculateScenarios({
@@ -778,7 +798,22 @@ export default function App() {
             {/* LEFT: Input Form */}
             <div>
               {/* Step 1: Laba */}
-              <section className="card">
+        <section className="card issuer-name-card">
+          <h2 className="section-title"><FileText size={18} /> Nama emiten</h2>
+          <label className="field-wrap">
+            <span className="input-label">Nama / kode saham</span>
+            <input
+              className="input-field"
+              type="text"
+              maxLength={80}
+              value={activeStock.name}
+              onChange={(event) => updateStock(activeStockId, { name: event.target.value })}
+              placeholder="Contoh: BBCA atau Bank Central Asia"
+            />
+          </label>
+        </section>
+
+        <section className="card">
                   <h2 className="section-title">
                   <TrendingUp size={18} />
                   1. Data fundamental
@@ -954,24 +989,23 @@ export default function App() {
               </button>
               {calculationNotice && <p className="calculation-notice" role="status">{calculationNotice}</p>}
               <div className="flex gap-2">
-                <button
-                  type="button"
-                  className="action-btn flex-1"
-                  onClick={loadExample}
-                  title="Muat data contoh BBNI"
-                >
+                <button type="button" className="action-btn-secondary flex-1" onClick={loadExample} title="Muat data contoh BBNI">
                   <FileText size={16} />
                   <span>Load Contoh</span>
                 </button>
-                <button
-                  type="button"
-                  className="action-btn-secondary flex-1"
-                  onClick={resetActive}
-                >
+                <button type="button" className="action-btn-secondary flex-1" onClick={resetActive}>
                   <RefreshCw size={16} />
                   <span>Reset</span>
                 </button>
               </div>
+              <button
+                type="button"
+                className={activeStock.isWatched ? "action-btn-secondary watchlist-save-button" : "action-btn watchlist-save-button"}
+                onClick={toggleWatchlist}
+              >
+                <Star size={17} fill={activeStock.isWatched ? "currentColor" : "none"} />
+                {activeStock.isWatched ? "Tersimpan di watchlist · Hapus dari watchlist" : "Simpan ke watchlist"}
+              </button>
             </div>
 
             {/* RIGHT: Results */}

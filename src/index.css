@@ -1184,6 +1184,32 @@ body {
   justify-self: start;
 }
 
+.valuation-choice-row {
+  display: grid;
+  grid-template-columns: minmax(5rem, 0.7fr) minmax(0, 1.3fr);
+  gap: 0.5rem;
+}
+
+.valuation-number-input,
+.valuation-preset-select {
+  min-width: 0;
+}
+
+.valuation-input-error {
+  color: var(--text-red);
+}
+
+.issuer-name-card {
+  margin-bottom: 1rem;
+}
+
+.watchlist-save-button {
+  display: flex;
+  width: 100%;
+  min-height: 3rem;
+  margin-top: 0.75rem;
+}
+
 .calculate-button {
   display: flex;
   width: 100%;
