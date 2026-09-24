@@ -36,6 +36,7 @@ export default function App() {
   const addStock = useStore((s) => s.addStock);
   const setActiveStock = useStore((s) => s.setActiveStock);
   const updateStock = useStore((s) => s.updateStock);
+  const renameStock = useStore((s) => s.renameStock);
   const updateStockForm = useStore((s) => s.updateStockForm);
   const updateStockUnit = useStore((s) => s.updateStockUnit);
   const updateStockPer = useStore((s) => s.updateStockPer);
@@ -790,7 +791,11 @@ export default function App() {
                 type="text"
                 maxLength={80}
                 value={activeStock.name}
-                onChange={(event) => updateStock(activeStockId, { name: event.target.value })}
+                onChange={(event) => {
+                  const name = event.target.value;
+                  updateStock(activeStockId, { name });
+                  if (name.trim() && name !== activeStock.name) renameStock(activeStockId, name.trim());
+                }}
                 placeholder="Contoh: BBCA atau Bank Central Asia"
               />
             </label>
