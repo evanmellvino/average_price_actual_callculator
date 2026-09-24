@@ -41,6 +41,7 @@ body {
   --text-red: #fb7185;
   --border: #2b3b52;
   --input-bg: #0b1220;
+  --input-text: #ffffff;
   --input-border: #3a4c64;
   --input-focus: #7dd3fc;
   --header-bg: #0e1726;
@@ -69,6 +70,7 @@ body {
   --text-red: #be123c;
   --border: #d9e1eb;
   --input-bg: #ffffff;
+  --input-text: #000000;
   --input-border: #cbd5e1;
   --input-focus: rgba(8, 127, 120, 0.42);
   --header-bg: #ffffff;
@@ -328,7 +330,7 @@ body {
   font-variant-numeric: tabular-nums;
   background: var(--input-bg);
   border: 1px solid var(--input-border);
-  color: var(--text);
+  color: var(--input-text);
 }
 
 .input-field::placeholder {
