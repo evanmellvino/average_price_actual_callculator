@@ -2,7 +2,8 @@ import { PER_OPTIONS, PBV_OPTIONS } from "../calculator.js";
 import { NumericField } from "./NumericField.jsx";
 
 export function PerPbvSelector({ per, pbv, customPbv, onChangePer, onChangePbv, onChangeCustomPbv, sectorPbvValues = [] }) {
-  const isCustom = pbv === 4;
+  const isCustom = Number(pbv) === 4 && !sectorPbvValues.includes(Number(customPbv));
+  const hasPresetPbv = sectorPbvValues.includes(Number(pbv));
 
   return (
     <div className="grid gap-6 md:grid-cols-2">
@@ -31,7 +32,7 @@ export function PerPbvSelector({ per, pbv, customPbv, onChangePer, onChangePbv, 
         </div>
         <select
           className="select-field"
-          value={isCustom ? 4 : pbv}
+          value={hasPresetPbv ? pbv : isCustom ? 4 : pbv}
           onChange={(e) => onChangePbv(Number(e.target.value))}
         >
           {PBV_OPTIONS.map((o) => (

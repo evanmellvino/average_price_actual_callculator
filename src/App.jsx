@@ -905,9 +905,12 @@ export default function App() {
                       const val = e.target.value || null;
                       setSectorByStock((current) => ({ ...current, [activeStockId]: val }));
                       if (val && SECTOR_PRESETS[val]) {
-                        updateStockPer(activeStockId, SECTOR_PRESETS[val].defaultPer);
-                        const pbvPreset = SECTOR_PRESETS[val].defaultPbv;
-                        updateStockPbv(activeStockId, pbvPreset);
+                        const preset = SECTOR_PRESETS[val];
+                        updateStock(activeStockId, {
+                          per: preset.defaultPer,
+                          pbv: preset.defaultPbv,
+                          customPbv: "",
+                        });
                       }
                     }}
                   >
