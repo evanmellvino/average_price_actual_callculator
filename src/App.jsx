@@ -54,6 +54,7 @@ export default function App() {
   const [sectorByStock, setSectorByStock] = useState({});
   const [tutorialOpen, setTutorialOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
+  const [watchlistOpen, setWatchlistOpen] = useState(false);
   const [historyNotice, setHistoryNotice] = useState("");
   const [scenarioOpen, setScenarioOpen] = useState(false);
   const [scenarioPer, setScenarioPer] = useState("");
@@ -351,6 +352,32 @@ export default function App() {
     maximumFractionDigits: 2,
   }).format(value || 0);
 
+  const watchlistComparisons = useMemo(() => watchlist.map((stock) => {
+    const customPbvMode = Number(stock.pbv) === 4;
+    const rawPbv = Number(stock.pbv);
+    const pbvChoice = customPbvMode || rawPbv < 1 || rawPbv > 3 ? 4 : rawPbv;
+    const customPbv = customPbvMode ? stock.customPbv : String(rawPbv);
+    const stockScenarios = calculateScenarios({
+      form: stock.form,
+      unit: stock.unit ?? "miliar",
+      per: Number(stock.per) || 10,
+      pbvChoice,
+      customPbv,
+    });
+    const baseScenario = stockScenarios[0];
+    const price = parseNumber(stock.form?.hargaSaham) || 0;
+    return {
+      id: stock.id,
+      name: stock.name,
+      currentPrice: price,
+      scenario: baseScenario,
+      upsidePercent: baseScenario && price > 0 ? ((baseScenario.averagePrice - price) / price) * 100 : null,
+      mosPrice: baseScenario?.marginOfSafety ?? null,
+      per: baseScenario?.per ?? (Number(stock.per) || null),
+      pbv: baseScenario?.pbv ?? null,
+    };
+  }).sort((a, b) => (b.upsidePercent ?? -Infinity) - (a.upsidePercent ?? -Infinity)), [watchlist]);
+
   // Share handler
   const handleShare = useCallback(() => {
     if (!activeStock) return;
@@ -602,24 +629,82 @@ export default function App() {
             </label>
           )}
           <div className="watchlist-row">
-            <h3><Star size={15} /> Watchlist ({watchlist.length})</h3>
-            {watchlist.length === 0 ? (
+            <div className="watchlist-heading-row">
+              <div>
+                <h3><Star size={15} /> Watchlist ({watchlist.length})</h3>
+                <p className="section-subtitle">Daftar saham pantauan, terpisah dari riwayat kalkulasi.</p>
+              </div>
+              <button
+                type="button"
+                className="action-btn-secondary"
+                onClick={() => setWatchlistOpen((open) => !open)}
+                aria-expanded={watchlistOpen}
+                disabled={watchlist.length === 0}
+              >
+                {watchlistOpen ? "Tutup watchlist" : "Tampilkan watchlist"}
+              </button>
+            </div>
+            {watchlistOpen && (watchlist.length === 0 ? (
               <p className="section-subtitle">Belum ada saham. Tandai saham aktif untuk memasukkannya.</p>
             ) : (
-              <div className="watchlist-items">
-                {watchlist.map((stock) => (
-                  <button
-                    type="button"
-                    key={stock.id}
-                    className={`watchlist-item ${stock.id === activeStockId ? "active" : ""}`}
-                    onClick={() => setActiveStock(stock.id)}
-                  >
-                    <span>{stock.name}</span>
-                    <strong>{parseNumber(stock.form?.hargaSaham) > 0 ? formatCurrency(parseNumber(stock.form.hargaSaham)) : "Harga belum diisi"}</strong>
-                  </button>
-                ))}
-              </div>
-            )}
+              <>
+                <div className="watchlist-items">
+                  {watchlist.map((stock) => (
+                    <button
+                      type="button"
+                      key={stock.id}
+                      className={`watchlist-item ${stock.id === activeStockId ? "active" : ""}`}
+                      onClick={() => setActiveStock(stock.id)}
+                    >
+                      <span>{stock.name}</span>
+                      <strong>{parseNumber(stock.form?.hargaSaham) > 0 ? formatCurrency(parseNumber(stock.form.hargaSaham)) : "Harga belum diisi"}</strong>
+                    </button>
+                  ))}
+                </div>
+                {watchlist.length > 1 && (
+                  <div className="watchlist-compare">
+                    <div className="watchlist-compare-heading">
+                      <div>
+                        <p className="summary-eyebrow">PERBANDINGAN SAHAM</p>
+                        <h4>Ringkasan valuasi watchlist</h4>
+                      </div>
+                      <span>{watchlistComparisons.length} saham</span>
+                    </div>
+                    <div className="watchlist-table-wrap">
+                      <table className="watchlist-table">
+                        <thead>
+                          <tr>
+                            <th scope="col">Saham</th>
+                            <th scope="col">Harga pasar</th>
+                            <th scope="col">Harga wajar</th>
+                            <th scope="col">Potensi</th>
+                            <th scope="col">Target MOS</th>
+                            <th scope="col">PER / PBV</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {watchlistComparisons.map((item) => (
+                            <tr key={item.id}>
+                              <th scope="row">
+                                <button type="button" className="watchlist-symbol-button" onClick={() => setActiveStock(item.id)}>{item.name}</button>
+                              </th>
+                              <td>{item.currentPrice > 0 ? formatCurrency(item.currentPrice) : "—"}</td>
+                              <td>{item.scenario ? formatCurrency(item.scenario.averagePrice) : "Data belum lengkap"}</td>
+                              <td className={item.upsidePercent === null ? "" : item.upsidePercent >= 0 ? "summary-positive" : "summary-negative"}>
+                                {item.upsidePercent === null ? "—" : `${item.upsidePercent >= 0 ? "+" : ""}${item.upsidePercent.toFixed(2)}%`}
+                              </td>
+                              <td>{item.mosPrice !== null ? formatCurrency(item.mosPrice) : "—"}</td>
+                              <td>{item.scenario ? `${item.per}× / ${item.pbv}×` : "—"}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    <p className="section-subtitle watchlist-compare-note">Potensi dihitung dari harga wajar rata-rata dibanding harga pasar. Data kosong atau belum cukup ditampilkan sebagai —.</p>
+                  </div>
+                )}
+              </>
+            ))}
           </div>
         </section>
 

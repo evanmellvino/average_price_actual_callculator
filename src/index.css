@@ -991,6 +991,96 @@ body {
   gap: 0.5rem;
 }
 
+.watchlist-heading-row,
+.watchlist-compare-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.watchlist-heading-row .section-subtitle {
+  margin: 0;
+}
+
+.watchlist-compare {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.watchlist-compare-heading h4 {
+  margin: 0;
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.watchlist-compare-heading > span {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+.watchlist-table-wrap {
+  width: 100%;
+  margin-top: 0.75rem;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+}
+
+.watchlist-table {
+  width: 100%;
+  min-width: 680px;
+  border-collapse: collapse;
+  color: var(--text);
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.watchlist-table th,
+.watchlist-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.watchlist-table thead th {
+  background: var(--page-elevated);
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.watchlist-table th:first-child,
+.watchlist-table td:first-child {
+  text-align: left;
+}
+
+.watchlist-table tbody tr:last-child th,
+.watchlist-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.watchlist-symbol-button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-accent);
+  font: inherit;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+
+.watchlist-symbol-button:hover {
+  text-decoration: underline;
+}
+
+.watchlist-compare-note {
+  margin: 0.6rem 0 0;
+}
+
 .watchlist-item {
   display: flex;
   min-width: 0;
@@ -1096,7 +1186,9 @@ body {
 
 @media (max-width: 640px) {
   .workspace-tools-heading,
-  .scenario-lab-heading {
+  .scenario-lab-heading,
+  .watchlist-heading-row,
+  .watchlist-compare-heading {
     align-items: stretch;
     flex-direction: column;
   }
