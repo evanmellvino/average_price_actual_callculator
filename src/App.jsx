@@ -61,6 +61,7 @@ export default function App() {
   const [watchlistReasonOpen, setWatchlistReasonOpen] = useState(false);
   const [watchlistReason, setWatchlistReason] = useState("");
   const lastHistorySignature = useRef("");
+  const autoHistoryTimer = useRef(null);
 
   useEffect(() => {
     if (!hasSupabaseConfig) {
@@ -302,7 +303,7 @@ export default function App() {
     });
     setWatchlistReasonOpen(false);
   };
-  const saveActiveHistory = useCallback(() => {
+  const saveActiveHistory = useCallback(({ force = false } = {}) => {
     if (!activeStock || !scenarios[0]) return false;
     const scenario = scenarios[0];
     const createdAt = new Date().toISOString();
@@ -317,8 +318,9 @@ export default function App() {
       pbv: scenario.pbv,
       form: activeStock.form,
       unit: activeStock.unit ?? "miliar",
+      customPbv: activeStock.customPbv ?? "",
     });
-    if (lastHistorySignature.current === signature) return false;
+    if (!force && lastHistorySignature.current === signature) return false;
     lastHistorySignature.current = signature;
     const localId = globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`;
     const snapshot = {
@@ -332,8 +334,11 @@ export default function App() {
       mosPrice: scenario.marginOfSafety,
       per: scenario.per,
       pbv: scenario.pbv,
-      form: activeStock.form,
+      form: { ...activeStock.form },
       unit: activeStock.unit ?? "miliar",
+      customPbv: activeStock.customPbv ?? "",
+      perAssumption: activeStock.per,
+      pbvAssumption: activeStock.pbv,
     };
     saveHistorySnapshot(snapshot);
     if (supabase && session?.user?.id) {
@@ -365,7 +370,7 @@ export default function App() {
       setCalculationNotice("Periksa kembali data wajib dan asumsi valuasi yang belum valid.");
       return;
     }
-    saveActiveHistory();
+    saveActiveHistory({ force: true });
     setCalculationNotice("Valuasi berhasil dihitung. Hasil terlihat di panel sebelah.");
     document.getElementById("results-container")?.scrollIntoView({ behavior: "smooth", block: "start" });
     window.setTimeout(() => setCalculationNotice(""), 4500);
@@ -383,10 +388,20 @@ export default function App() {
       pbv: scenarios[0]?.pbv,
       form: activeStock.form,
       unit: activeStock.unit ?? "miliar",
+      customPbv: activeStock.customPbv ?? "",
     });
     if (lastHistorySignature.current === signature) return;
-    const timeout = window.setTimeout(() => saveActiveHistory(), 1800);
-    return () => window.clearTimeout(timeout);
+    if (autoHistoryTimer.current) window.clearTimeout(autoHistoryTimer.current);
+    autoHistoryTimer.current = window.setTimeout(() => {
+      saveActiveHistory();
+      autoHistoryTimer.current = null;
+    }, 1800);
+    return () => {
+      if (autoHistoryTimer.current) {
+        window.clearTimeout(autoHistoryTimer.current);
+        autoHistoryTimer.current = null;
+      }
+    };
   }, [activeStock, canCalculate, scenarios, currentPrice, session?.user?.id, loadedUserId, saveActiveHistory]);
   const summaryScenario = scenarios[0];
   const scenarioResult = useMemo(() => {
@@ -428,21 +443,37 @@ export default function App() {
 
   const openHistoryCalculation = (item) => {
     const stock = useStore.getState().stocks.find((entry) => entry.id === item.stockId);
-    if (stock) {
+    const savedForm = item.form;
+    if (stock && !savedForm) {
       openStockCalculation(stock.id);
       return;
     }
-    const id = addStock();
-    updateStock(id, {
-      name: item.stockName || "Saham dari riwayat",
-      per: item.per ?? 10,
-      pbv: item.pbv ?? 1,
-      customPbv: item.pbv >= 4 ? String(item.pbv) : "",
-      form: { ...EMPTY_FORM, ...(item.form ?? {}) },
-      unit: item.unit ?? "miliar",
-    });
+    if (stock && savedForm) {
+      updateStock(stock.id, {
+        name: item.stockName || stock.name,
+        per: item.perAssumption ?? item.per ?? stock.per,
+        pbv: item.pbvAssumption ?? item.pbv ?? stock.pbv,
+        customPbv: item.customPbv ?? stock.customPbv ?? "",
+        form: { ...EMPTY_FORM, ...(item.form ?? {}) },
+        unit: item.unit ?? stock.unit ?? "miliar",
+      });
+      lastHistorySignature.current = "";
+    }
+    const id = stock?.id ?? addStock();
+    if (!stock) {
+      updateStock(id, {
+        name: item.stockName || "Saham dari riwayat",
+        per: item.perAssumption ?? item.per ?? 10,
+        pbv: item.pbvAssumption ?? item.pbv ?? 1,
+        customPbv: item.customPbv ?? (item.pbv >= 4 ? String(item.pbv) : ""),
+        form: { ...EMPTY_FORM, ...(item.form ?? {}) },
+        unit: item.unit ?? "miliar",
+      });
+      lastHistorySignature.current = "";
+    }
+    setActiveStock(id);
     setHistoryOpen(false);
-    window.setTimeout(() => document.getElementById("results-container")?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
+    window.setTimeout(() => document.getElementById("results-container")?.scrollIntoView({ behavior: "smooth", block: "start" }), 120);
   };
 
   const watchlistComparisons = useMemo(() => watchlist.map((stock) => {

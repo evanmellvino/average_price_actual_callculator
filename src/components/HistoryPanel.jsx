@@ -7,6 +7,23 @@ const formatRp = (value) => new Intl.NumberFormat("id-ID", {
 }).format(value || 0);
 
 export function HistoryPanel({ history, onDelete, onOpen }) {
+  const uniqueHistory = history.filter((item, index, items) => {
+    const itemTimestamp = new Date(item.createdAt).getTime();
+    const duplicateIndex = items.findIndex((candidate) => {
+      const candidateTimestamp = new Date(candidate.createdAt).getTime();
+      return candidate.stockId === item.stockId &&
+        candidate.stockName === item.stockName &&
+        candidate.scenarioLabel === item.scenarioLabel &&
+        candidate.averagePrice === item.averagePrice &&
+        candidate.currentPrice === item.currentPrice &&
+        candidate.per === item.per &&
+        candidate.pbv === item.pbv &&
+        JSON.stringify(candidate.form ?? null) === JSON.stringify(item.form ?? null) &&
+        candidate.unit === item.unit &&
+        Math.abs(candidateTimestamp - itemTimestamp) < 60_000;
+    });
+    return duplicateIndex === index;
+  });
   return (
     <section className="card history-panel">
       <div className="history-heading">
@@ -14,13 +31,13 @@ export function HistoryPanel({ history, onDelete, onOpen }) {
           <p className="summary-eyebrow">TERSIMPAN DI AKUN ANDA</p>
           <h2 className="section-title">Riwayat Penghitungan</h2>
         </div>
-        <span className="history-count">{history.length} catatan</span>
+        <span className="history-count">{uniqueHistory.length} catatan</span>
       </div>
-      {history.length === 0 ? (
+      {uniqueHistory.length === 0 ? (
           <p className="history-empty">Belum ada riwayat. Hasil valuasi yang valid akan tersimpan otomatis.</p>
       ) : (
         <div className="history-list">
-          {history.map((item) => (
+          {uniqueHistory.map((item) => (
             <article
               className={`history-item ${onOpen ? "history-item-clickable" : ""}`}
               key={item.id}
