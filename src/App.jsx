@@ -21,6 +21,8 @@ export default function App() {
   const [authReady, setAuthReady] = useState(!hasSupabaseConfig);
   const [authNotice, setAuthNotice] = useState("");
   const [loadedUserId, setLoadedUserId] = useState(null);
+  const [cloudLoadError, setCloudLoadError] = useState({ userId: null, message: "" });
+  const [retryCloudLoad, setRetryCloudLoad] = useState(0);
   // Global state
   const theme = useStore((s) => s.theme);
   const toggleTheme = useStore((s) => s.toggleTheme);
@@ -84,32 +86,28 @@ export default function App() {
   useEffect(() => {
     if (!session?.user?.id || !supabase) return undefined;
     let alive = true;
-    Promise.all([
-      supabase.from("user_stocks").select("id,name,data,created_at,updated_at").eq("user_id", session.user.id),
-      supabase.from("calculation_history").select("id,stock_id,stock_name,snapshot,created_at").eq("user_id", session.user.id).order("created_at", { ascending: false }).limit(100),
-    ]).then(async ([stocksResult, historyResult]) => {
+    supabase.from("user_stocks").select("id,name,data,created_at,updated_at").eq("user_id", session.user.id)
+    .then(async (stocksResult) => {
       if (!alive) return;
-      if (stocksResult.error || historyResult.error) {
-        setAuthNotice(`Gagal memuat data akun: ${stocksResult.error?.message || historyResult.error?.message}`);
+      if (stocksResult.error) {
+        setCloudLoadError({ userId: session.user.id, message: `Gagal memuat data saham: ${stocksResult.error.message}` });
         return;
       }
       const cloudStocks = (stocksResult.data ?? []).map((row) => ({ ...row.data, id: row.id, name: row.name }));
-      const cloudHistory = (historyResult.data ?? []).map((row) => ({ ...row.snapshot, id: row.id, stockId: row.stock_id, stockName: row.stock_name, createdAt: row.created_at }));
+      const { data: historyRows, error: historyError } = await supabase.from("calculation_history").select("id,stock_id,stock_name,snapshot,created_at").eq("user_id", session.user.id).order("created_at", { ascending: false }).limit(100);
+      const cloudHistory = (historyRows ?? []).map((row) => ({ ...row.snapshot, id: row.id, stockId: row.stock_id, stockName: row.stock_name, createdAt: row.created_at }));
       const localStocks = useStore.getState().stocks;
       const localHistory = useStore.getState().history ?? [];
-      if (cloudHistory.length === 0 && localHistory.length === 0) {
-        setAuthNotice("Belum ada riwayat tersimpan. Hitung saham, lalu tekan ‘Simpan riwayat’.");
-      } else {
-        setAuthNotice("");
-      }
       replaceUserData({
         stocks: cloudStocks.length ? cloudStocks : localStocks,
-        history: cloudHistory.length ? cloudHistory : localHistory,
+        history: historyError ? localHistory : cloudHistory.length ? cloudHistory : localHistory,
       });
+      if (historyError) setAuthNotice(`Riwayat belum bisa dimuat: ${historyError.message}`);
+      else if (cloudHistory.length === 0 && localHistory.length === 0) setAuthNotice("Belum ada riwayat tersimpan. Hitung saham, lalu tekan ‘Simpan riwayat’.");
+      else setAuthNotice("");
       if (cloudStocks.length === 0 && localStocks.length > 0) {
         const { error: importError } = await supabase.from("user_stocks").upsert(
           localStocks.map((stock) => ({
-            id: globalThis.crypto?.randomUUID?.(),
             user_id: session.user.id,
             name: stock.name,
             data: { ...stock, id: undefined, name: undefined },
@@ -122,12 +120,12 @@ export default function App() {
           if (importedStocks) {
             replaceUserData({
               stocks: importedStocks.map((row) => ({ ...row.data, id: row.id, name: row.name })),
-              history: cloudHistory,
+              history: historyError ? localHistory : cloudHistory,
             });
           }
         }
       }
-    if (cloudHistory.length === 0 && localHistory.length > 0) {
+      if (!historyError && cloudHistory.length === 0 && localHistory.length > 0) {
         const { error: importHistoryError } = await supabase.from("calculation_history").insert(
         localHistory.map((item) => ({
             id: globalThis.crypto?.randomUUID?.(),
@@ -149,10 +147,12 @@ export default function App() {
           }
         }
       }
-      setLoadedUserId(session.user.id);
+      if (alive) setLoadedUserId(session.user.id);
+    }).catch((error) => {
+      if (alive) setCloudLoadError({ userId: session.user.id, message: `Tidak dapat memuat data akun: ${error.message || "Periksa koneksi internet."}` });
     });
     return () => { alive = false; };
-  }, [session?.user?.id, replaceUserData]);
+  }, [session?.user?.id, replaceUserData, retryCloudLoad]);
 
   useEffect(() => {
     if (!session?.user?.id || loadedUserId !== session.user.id || !supabase) return;
@@ -369,6 +369,11 @@ export default function App() {
     if (error) setAuthNotice(error.message);
   };
 
+  const retryAccountLoad = () => {
+    setCloudLoadError({ userId: null, message: "" });
+    setRetryCloudLoad((value) => value + 1);
+  };
+
   const handlePasswordUpdate = async (event) => {
     event.preventDefault();
     setRecoveryBusy(true);
@@ -417,8 +422,21 @@ export default function App() {
       </main>
     );
   }
-  if (!session || loadedUserId !== session.user.id) {
+  if (!session || (loadedUserId !== session.user.id && cloudLoadError.userId !== session.user.id)) {
     return <main className="auth-page"><div className="auth-loading">Memuat data akun...</div></main>;
+  }
+  if (cloudLoadError.userId === session?.user?.id && cloudLoadError.message) {
+    return (
+      <main className="auth-page">
+        <section className="auth-card">
+          <p className="summary-eyebrow">SINKRONISASI DATA</p>
+          <h1>Data belum termuat</h1>
+          <p className="auth-description">{cloudLoadError.message}</p>
+          <button type="button" className="action-btn auth-submit" onClick={retryAccountLoad}>Coba lagi</button>
+          <button type="button" className="action-btn-secondary auth-submit" onClick={handleSignOut}>Keluar</button>
+        </section>
+      </main>
+    );
   }
 
   return (
