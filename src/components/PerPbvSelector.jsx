@@ -2,7 +2,8 @@ import { PER_OPTIONS, PBV_OPTIONS } from "../calculator.js";
 import { NumericField } from "./NumericField.jsx";
 
 export function PerPbvSelector({ per, pbv, customPbv, onChangePer, onChangePbv, onChangeCustomPbv, sectorPbvValues = [] }) {
-  const isCustom = Number(pbv) === 4 && !sectorPbvValues.includes(Number(customPbv));
+  const isSectorPreset = sectorPbvValues.includes(Number(pbv));
+  const isCustom = Number(pbv) === 4 && !isSectorPreset;
   const hasPresetPbv = sectorPbvValues.includes(Number(pbv));
 
   return (

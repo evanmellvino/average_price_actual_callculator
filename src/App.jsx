@@ -260,9 +260,10 @@ export default function App() {
   // Calculate active stock
   const { scenarios, errors, canCalculate } = useMemo(() => {
     if (!activeStock) return { scenarios: [], errors: {}, canCalculate: false };
-    const customPbvMode = Number(activeStock.pbv) === 4;
     const rawPbv = Number(activeStock.pbv);
-    const validationPbvChoice = customPbvMode || rawPbv < 1 || rawPbv > 3 ? 4 : rawPbv;
+    const isSectorPbv = Object.values(SECTOR_PRESETS).some((preset) => preset.defaultPbv === rawPbv);
+    const customPbvMode = rawPbv === 4 && !isSectorPbv;
+    const validationPbvChoice = customPbvMode ? 4 : rawPbv;
     const validationCustomPbv = customPbvMode ? activeStock.customPbv : String(rawPbv);
     const { errors, canCalculate } = validateForm(
       activeStock.form,
@@ -270,7 +271,7 @@ export default function App() {
       validationPbvChoice,
       validationCustomPbv
     );
-    const calculationPbv = customPbvMode || rawPbv < 1 || rawPbv > 3 ? 4 : rawPbv;
+    const calculationPbv = customPbvMode ? 4 : rawPbv;
     const calculationCustomPbv = customPbvMode ? activeStock.customPbv : String(rawPbv);
     const scenarios = calculateScenarios({
       form: activeStock.form,
@@ -365,7 +366,7 @@ export default function App() {
   const watchlistComparisons = useMemo(() => watchlist.map((stock) => {
     const customPbvMode = Number(stock.pbv) === 4;
     const rawPbv = Number(stock.pbv);
-    const pbvChoice = customPbvMode || rawPbv < 1 || rawPbv > 3 ? 4 : rawPbv;
+    const pbvChoice = customPbvMode ? 4 : rawPbv;
     const customPbv = customPbvMode ? stock.customPbv : String(rawPbv);
     const stockScenarios = calculateScenarios({
       form: stock.form,
