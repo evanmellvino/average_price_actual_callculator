@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
-import { Calculator, RefreshCw, FileText, Sun, Moon, TrendingUp, Plus, Trash2, Copy, Share2, Download, HelpCircle, History, BookmarkPlus, ShieldCheck } from "lucide-react";
+import { Calculator, RefreshCw, FileText, Sun, Moon, TrendingUp, Plus, Trash2, Copy, Share2, Download, HelpCircle, History, BookmarkPlus, ShieldCheck, Star, FlaskConical } from "lucide-react";
 import { useStore } from "./store.js";
 import { EXAMPLE_DATA, parseNumber, validateForm, calculateScenarios, SECTOR_PRESETS } from "./calculator.js";
 import { generateShareURL, parseShareURL, copyToClipboard, exportAsPNG } from "./exportUtils.js";
@@ -44,6 +44,7 @@ export default function App() {
   const updateStockPer = useStore((s) => s.updateStockPer);
   const updateStockPbv = useStore((s) => s.updateStockPbv);
   const updateStockCustomPbv = useStore((s) => s.updateStockCustomPbv);
+  const watchlist = stocks.filter((stock) => stock.isWatched);
 
   // Local state
   const [editingName, setEditingName] = useState(null);
@@ -54,6 +55,10 @@ export default function App() {
   const [tutorialOpen, setTutorialOpen] = useState(false);
   const [historyOpen, setHistoryOpen] = useState(false);
   const [historyNotice, setHistoryNotice] = useState("");
+  const [scenarioOpen, setScenarioOpen] = useState(false);
+  const [scenarioPer, setScenarioPer] = useState("");
+  const [scenarioPbv, setScenarioPbv] = useState("");
+  const [scenarioGrowth, setScenarioGrowth] = useState("0");
 
   useEffect(() => {
     if (!hasSupabaseConfig) {
@@ -276,6 +281,10 @@ export default function App() {
   }, [activeStock]);
 
   const currentPrice = activeStock ? parseNumber(activeStock.form.hargaSaham) || 0 : 0;
+  const toggleWatchlist = () => {
+    if (!activeStock) return;
+    updateStock(activeStockId, { isWatched: !activeStock.isWatched });
+  };
   const saveActiveHistory = useCallback(() => {
     if (!activeStock || !scenarios[0]) return;
     const scenario = scenarios[0];
@@ -315,6 +324,18 @@ export default function App() {
     window.setTimeout(() => setHistoryNotice(""), 5000);
   }, [activeStock, scenarios, saveHistorySnapshot, currentPrice, session]);
   const summaryScenario = scenarios[0];
+  const scenarioResult = useMemo(() => {
+    if (!summaryScenario) return null;
+    const per = parseNumber(scenarioPer);
+    const pbv = parseNumber(scenarioPbv);
+    const growth = parseNumber(scenarioGrowth);
+    if (per === null || per <= 0 || pbv === null || pbv <= 0 || growth === null) return null;
+    const projectedEps = summaryScenario.eps * (1 + growth / 100);
+    if (projectedEps <= 0) return null;
+    const fairValuePer = projectedEps * per;
+    const fairValuePbv = summaryScenario.bvps * pbv;
+    return { fairValuePer, fairValuePbv, averagePrice: (fairValuePer + fairValuePbv) / 2 };
+  }, [summaryScenario, scenarioPer, scenarioPbv, scenarioGrowth]);
   const marketComparison = summaryScenario && currentPrice > 0
     ? {
         difference: currentPrice - summaryScenario.averagePrice,
@@ -550,6 +571,57 @@ export default function App() {
             </button>
           </div>
         </div>
+
+        <section className="workspace-tools card" aria-labelledby="workspace-tools-title">
+          <div className="workspace-tools-heading">
+            <div>
+              <p className="summary-eyebrow">RISET PERSONAL</p>
+              <h2 id="workspace-tools-title" className="workspace-tools-title">Watchlist & tesis</h2>
+            </div>
+            <button
+              type="button"
+              className={activeStock?.isWatched ? "action-btn" : "action-btn-secondary"}
+              onClick={toggleWatchlist}
+              disabled={!activeStock}
+            >
+              <Star size={16} fill={activeStock?.isWatched ? "currentColor" : "none"} />
+              {activeStock?.isWatched ? "Di watchlist" : "Tambahkan ke watchlist"}
+            </button>
+          </div>
+          {activeStock && (
+            <label className="thesis-field">
+              <span className="input-label">Tesis investasi · tersimpan pada saham ini</span>
+              <textarea
+                className="input-field thesis-input"
+                value={activeStock.thesis ?? ""}
+                onChange={(event) => updateStock(activeStockId, { thesis: event.target.value })}
+                maxLength={2000}
+                placeholder="Apa alasan utama memantau saham ini? Catat katalis, risiko, dan kondisi yang membatalkan tesis…"
+              />
+              <span className="thesis-counter">{(activeStock.thesis ?? "").length}/2000</span>
+            </label>
+          )}
+          <div className="watchlist-row">
+            <h3><Star size={15} /> Watchlist ({watchlist.length})</h3>
+            {watchlist.length === 0 ? (
+              <p className="section-subtitle">Belum ada saham. Tandai saham aktif untuk memasukkannya.</p>
+            ) : (
+              <div className="watchlist-items">
+                {watchlist.map((stock) => (
+                  <button
+                    type="button"
+                    key={stock.id}
+                    className={`watchlist-item ${stock.id === activeStockId ? "active" : ""}`}
+                    onClick={() => setActiveStock(stock.id)}
+                  >
+                    <span>{stock.name}</span>
+                    <strong>{parseNumber(stock.form?.hargaSaham) > 0 ? formatCurrency(parseNumber(stock.form.hargaSaham)) : "Harga belum diisi"}</strong>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
 
         {historyOpen && <HistoryPanel history={history} onDelete={async (id) => {
           const { error } = await supabase.from("calculation_history").delete().eq("id", id).eq("user_id", session.user.id);
@@ -872,6 +944,48 @@ export default function App() {
                       </p>
                     </section>
                   )}
+
+                  <section className="card scenario-lab">
+                    <div className="scenario-lab-heading">
+                      <div>
+                        <p className="summary-eyebrow">ANALISIS SENSITIVITAS</p>
+                        <h2 className="workspace-tools-title"><FlaskConical size={18} /> Scenario Lab</h2>
+                        <p className="section-subtitle">Uji asumsi alternatif tanpa mengubah valuasi utama.</p>
+                      </div>
+                      <button type="button" className="action-btn-secondary" onClick={() => setScenarioOpen((open) => !open)} aria-expanded={scenarioOpen}>
+                        {scenarioOpen ? "Tutup skenario" : "Uji skenario"}
+                      </button>
+                    </div>
+                    {scenarioOpen && (
+                      <div className="scenario-lab-content">
+                        <label className="scenario-input-label">
+                          <span>PER alternatif</span>
+                          <input className="input-field" type="text" inputMode="decimal" value={scenarioPer} onChange={(event) => setScenarioPer(event.target.value)} placeholder={`${summaryScenario.per}`} />
+                        </label>
+                        <label className="scenario-input-label">
+                          <span>PBV alternatif</span>
+                          <input className="input-field" type="text" inputMode="decimal" value={scenarioPbv} onChange={(event) => setScenarioPbv(event.target.value)} placeholder={`${summaryScenario.pbv}`} />
+                        </label>
+                        <label className="scenario-input-label">
+                          <span>Pertumbuhan EPS (%)</span>
+                          <input className="input-field" type="text" inputMode="decimal" value={scenarioGrowth} onChange={(event) => setScenarioGrowth(event.target.value)} placeholder="0" />
+                        </label>
+                        {scenarioResult ? (
+                          <div className="scenario-output" aria-live="polite">
+                            <div><span>Nilai PER</span><strong>{formatCurrency(scenarioResult.fairValuePer)}</strong></div>
+                            <div><span>Nilai PBV</span><strong>{formatCurrency(scenarioResult.fairValuePbv)}</strong></div>
+                            <div className="scenario-output-average"><span>Harga wajar rata-rata skenario</span><strong>{formatCurrency(scenarioResult.averagePrice)}</strong></div>
+                            <p>EPS dasar {formatCurrency(summaryScenario.eps)} disesuaikan dengan pertumbuhan {parseNumber(scenarioGrowth)}% · BVPS tetap {formatCurrency(summaryScenario.bvps)}.</p>
+                          </div>
+                        ) : (
+                          <p className="section-subtitle scenario-validation">Masukkan PER dan PBV positif serta pertumbuhan EPS valid agar hasil skenario muncul.</p>
+                        )}
+                        <button type="button" className="action-btn-secondary scenario-reset" onClick={() => { setScenarioPer(""); setScenarioPbv(""); setScenarioGrowth("0"); }}>
+                          Gunakan ulang asumsi utama
+                        </button>
+                      </div>
+                    )}
+                  </section>
 
                    {scenarios.map((s) => (
                     <ResultCard key={s.key} scenario={s} />

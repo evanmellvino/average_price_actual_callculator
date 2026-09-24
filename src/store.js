@@ -33,6 +33,8 @@ export const useStore = create(
           per: 10,
           pbv: 1,
           customPbv: "",
+          thesis: "",
+          isWatched: false,
           createdAt: new Date().toISOString(),
         };
         set((state) => ({
@@ -155,7 +157,7 @@ export const useStore = create(
     }),
     {
       name: "calculator-store",
-      version: 5,
+      version: 6,
       migrate: (persistedState) => ({
         ...persistedState,
         activeStockId: persistedState?.stocks?.some((stock) => stock.id === persistedState.activeStockId)
@@ -178,8 +180,11 @@ export const useStore = create(
           pbv: stock.pbv ?? 1,
           customPbv: stock.customPbv ?? "",
           unit: stock.unit ?? "miliar",
+          thesis: stock.thesis ?? "",
+          isWatched: stock.isWatched ?? false,
         })),
         history: persistedState?.history ?? [],
+        version: 6,
       }),
     }
   )
