@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
-import { Calculator, RefreshCw, FileText, Sun, Moon, TrendingUp, Plus, Trash2, Copy, Share2, Download, HelpCircle, History, BookmarkPlus } from "lucide-react";
+import { Calculator, RefreshCw, FileText, Sun, Moon, TrendingUp, Plus, Trash2, Copy, Share2, Download, HelpCircle, History, BookmarkPlus, ShieldCheck } from "lucide-react";
 import { useStore } from "./store.js";
 import { EXAMPLE_DATA, parseNumber, validateForm, calculateScenarios, SECTOR_PRESETS } from "./calculator.js";
 import { generateShareURL, parseShareURL, copyToClipboard, exportAsPNG } from "./exportUtils.js";
@@ -450,12 +450,11 @@ export default function App() {
             </div>
             <div>
               <h1 className="brand-title">Average Price Calculator</h1>
-              <p className="brand-subtitle">Kalkulator Harga Wajar Saham — Metode PER & PBV</p>
+              <p className="brand-subtitle">Analisis valuasi saham Indonesia</p>
             </div>
           </div>
           <div className="header-actions">
-            <span className="account-email">{session.user.email}</span>
-            <button type="button" className="action-btn-secondary signout-btn" onClick={handleSignOut}>Keluar</button>
+            <span className="account-email"><ShieldCheck size={14} />{session.user.email}</span>
             <button
               type="button"
               className="header-btn"
@@ -478,10 +477,18 @@ export default function App() {
 
       {/* Main */}
       <main className="container-main">
+        <section className="page-intro">
+          <div>
+            <p className="page-kicker">WORKSPACE INVESTASI</p>
+            <h2>Analisis harga wajar</h2>
+            <p>Hitung estimasi nilai saham dengan pendekatan PER dan PBV.</p>
+          </div>
+          <button type="button" className="action-btn-secondary signout-btn" onClick={handleSignOut}>Keluar akun</button>
+        </section>
         {/* Disclaimer */}
         <div className="disclaimer">
-          <p className="font-semibold mb-1">⚠️ Disclaimer</p>
-          <p>
+          <p className="disclaimer-title">Informasi risiko</p>
+          <p className="disclaimer-copy">
             Bukan ajakan jual/beli saham. Keputusan dan risiko sepenuhnya di tangan Anda.
             Selalu lakukan analisis mandiri. Investasi saham memiliki risiko tinggi.
           </p>
@@ -504,6 +511,7 @@ export default function App() {
                   <button
                     type="button"
                     title="Rename"
+                    aria-label={`Ubah nama ${stock.name}`}
                     onClick={() => startRename(stock.id, stock.name)}
                     className="tab-icon"
                   >
@@ -512,6 +520,7 @@ export default function App() {
                   <button
                     type="button"
                     title="Duplicate"
+                    aria-label={`Duplikat ${stock.name}`}
                     onClick={() => duplicateStock(stock.id)}
                     className="tab-icon"
                   >
@@ -520,6 +529,7 @@ export default function App() {
                   <button
                     type="button"
                     title="Delete"
+                    aria-label={`Hapus ${stock.name}`}
                     onClick={() => deleteStock(stock.id)}
                     className="tab-icon danger"
                   >
@@ -532,7 +542,7 @@ export default function App() {
           <div className="stock-tabs-actions">
             <button type="button" onClick={addStock} className="action-btn" title="Add new stock">
               <Plus size={16} />
-              <span className="hidden sm:inline">Stock Baru</span>
+              <span className="hidden sm:inline">Tambah saham</span>
             </button>
             <button type="button" onClick={() => setHistoryOpen((open) => !open)} className="action-btn-secondary" title="Lihat riwayat">
               <History size={16} />
@@ -603,7 +613,7 @@ export default function App() {
               <section className="card">
                 <h2 className="section-title">
                   <TrendingUp size={18} />
-                  Step 1 — Data Dasar
+                  1. Data fundamental
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <NumericField
@@ -656,7 +666,7 @@ export default function App() {
               <section className="card">
                 <h2 className="section-title">
                   <FileText size={18} />
-                  Step 2 — Saham & Dividen
+                  2. Saham & dividen
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <NumericField
@@ -715,11 +725,11 @@ export default function App() {
               <section className="card">
                 <h2 className="section-title">
                   <TrendingUp size={18} />
-                  Step 3 — Asumsi PER & PBV
+                  3. Asumsi valuasi
                 </h2>
                 <div className="field-wrap mb-4">
                   <div className="field-label-row">
-                    <label className="input-label">Preset Sektor (Opsional)</label>
+                    <label className="input-label">Preset sektor <span className="optional-label">Opsional</span></label>
                   </div>
                   <select
                     className="select-field"
@@ -734,7 +744,7 @@ export default function App() {
                       }
                     }}
                   >
-                    <option value="">Manual (tanpa preset)</option>
+                    <option value="">Pilih sektor (opsional)</option>
                     {Object.entries(SECTOR_PRESETS).map(([key, s]) => (
                       <option key={key} value={key}>
                         {s.name} — PER {s.defaultPer} / PBV {s.defaultPbv}
@@ -811,7 +821,7 @@ export default function App() {
                         <p className="summary-eyebrow">RINGKASAN VALUASI</p>
                         <h2 className="summary-title">{activeStock.name}</h2>
                       </div>
-                      <span className="summary-scenario-tag">Acuan: {summaryScenario.label}</span>
+                  <span className="summary-scenario-tag">Skenario acuan · {summaryScenario.label}</span>
                     </div>
                     <div className="summary-metrics">
                       <article className="summary-metric summary-fair-value">
@@ -823,11 +833,11 @@ export default function App() {
                         <strong>{currentPrice > 0 ? formatCurrency(currentPrice) : "Belum diisi"}</strong>
                       </article>
                       <article className={`summary-metric ${marketComparison ? (marketComparison.upsidePercent >= 0 ? "summary-positive" : "summary-negative") : ""}`}>
-                        <span>Potensi ke Harga Wajar</span>
+                      <span>Potensi dari harga pasar</span>
                         <strong>{marketComparison ? `${marketComparison.upsidePercent >= 0 ? "+" : ""}${marketComparison.upsidePercent.toFixed(2)}%` : "Isi harga pasar"}</strong>
                       </article>
                       <article className="summary-metric summary-mos">
-                        <span>Target Beli setelah MOS{summaryScenario.marginOfSafetyPercent !== null ? ` ${summaryScenario.marginOfSafetyPercent}%` : ""}</span>
+                      <span>Target harga dengan MOS{summaryScenario.marginOfSafetyPercent !== null ? ` · ${summaryScenario.marginOfSafetyPercent}%` : ""}</span>
                         <strong>{summaryScenario.marginOfSafety !== null ? formatCurrency(summaryScenario.marginOfSafety) : "Isi MOS"}</strong>
                       </article>
                     </div>
@@ -863,7 +873,7 @@ export default function App() {
                     </section>
                   )}
 
-                  {scenarios.map((s) => (
+                   {scenarios.map((s) => (
                     <ResultCard key={s.key} scenario={s} />
                   ))}
 
@@ -934,7 +944,7 @@ export default function App() {
               <li>Isi MOS 0–100% untuk harga setelah diskon. DCF yang ditampilkan adalah estimasi EPS terdiskonto, bukan DCF arus kas bebas.</li>
               <li>Data tersimpan lokal di browser. Tombol Share membuat tautan berisi data kalkulasi.</li>
             </ol>
-            <button type="button" className="action-btn" autoFocus onClick={() => setTutorialOpen(false)}>Mengerti</button>
+            <button type="button" className="action-btn" autoFocus onClick={() => setTutorialOpen(false)}>Saya mengerti</button>
           </section>
         </div>
       )}

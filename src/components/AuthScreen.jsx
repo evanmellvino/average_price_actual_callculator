@@ -41,7 +41,7 @@ export function AuthScreen({ supabase, notice, onDismissNotice }) {
     <main className="auth-page">
       <section className="auth-card">
         <div className="auth-brand-icon"><Calculator size={25} /></div>
-        <p className="summary-eyebrow">AVERAGE PRICE CALCULATOR</p>
+        <p className="auth-brand-name">AVERAGE PRICE CALCULATOR</p>
         <h1>{mode === "login" ? "Selamat datang kembali" : mode === "signup" ? "Buat akun pribadi" : "Reset password"}</h1>
         <p className="auth-description">{mode === "reset" ? "Masukkan email akun. Kami akan mengirim tautan untuk membuat password baru." : "Masuk untuk menggunakan kalkulator dan menyimpan saham serta riwayat analisis di akun Anda."}</p>
         {notice && <div className="auth-notice" role="status">{notice}</div>}

@@ -143,6 +143,46 @@ body {
   color: var(--text-muted);
 }
 
+.page-intro {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.25rem 0 0.5rem;
+}
+
+.page-kicker {
+  margin: 0 0 0.45rem;
+  color: var(--text-accent);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.page-intro h2 {
+  margin: 0;
+  color: var(--text);
+  font-size: clamp(1.45rem, 3vw, 2rem);
+  font-weight: 750;
+  letter-spacing: -0.035em;
+}
+
+.page-intro p:last-child {
+  margin: 0.45rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.account-email {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--page-elevated);
+}
+
 .header-actions {
   @apply flex items-center gap-2;
 }
@@ -162,6 +202,9 @@ body {
   background: var(--highlight);
   color: var(--text-accent);
   border: 1px solid var(--border);
+  min-height: 2.65rem;
+  justify-content: center;
+  cursor: pointer;
 }
 
 .action-btn:hover {
@@ -186,6 +229,7 @@ body {
   backdrop-filter: blur(8px);
   box-shadow: 0 12px 36px var(--shadow);
   transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+  border-radius: 1.1rem;
 }
 
 .card:hover {
@@ -207,6 +251,18 @@ body {
   background: var(--danger);
   border: 1px solid var(--text-red);
   color: var(--text-red);
+}
+
+.disclaimer-title {
+  margin: 0 0 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 750;
+}
+
+.disclaimer-copy {
+  margin: 0;
+  font-size: 0.76rem;
+  line-height: 1.55;
 }
 
 /* === Form === */
@@ -365,6 +421,13 @@ body {
 .section-title {
   @apply text-lg font-bold flex items-center gap-2 mb-4;
   color: var(--text-accent);
+}
+
+.optional-label {
+  margin-left: 0.25rem;
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  font-weight: 500;
 }
 
 .section-subtitle {
@@ -953,10 +1016,19 @@ body {
   color: white;
 }
 
+.auth-brand-name {
+  margin: 0 0 0.55rem;
+  color: #4ade80;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
 .auth-card h1 {
   margin: 0.3rem 0 0.5rem;
   font-size: 1.6rem;
   font-weight: 750;
+  letter-spacing: -0.03em;
 }
 
 .auth-description,
@@ -1061,7 +1133,14 @@ body {
 }
 
 .account-email {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
   max-width: 14rem;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--page-elevated);
   overflow: hidden;
   color: var(--text-muted);
   font-size: 0.75rem;
@@ -1132,6 +1211,20 @@ body {
     margin-top: 0.15rem;
     font-size: 0.64rem;
     line-height: 1.35;
+  }
+
+  .page-intro {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .page-intro p:last-child {
+    font-size: 0.8rem;
+  }
+
+  .page-intro .signout-btn {
+    align-self: flex-end;
   }
 
   .header-actions {
@@ -1474,6 +1567,11 @@ body {
   box-shadow: 0 6px 18px var(--shadow);
 }
 
+.stock-tab.active .tab-label {
+  color: var(--text-accent);
+  font-weight: 700;
+}
+
 .tab-label {
   @apply text-sm font-medium whitespace-nowrap;
   color: var(--text);
@@ -1544,6 +1642,9 @@ body {
   background: var(--btn-secondary);
   color: var(--text);
   border: 1px solid var(--border);
+  min-height: 2.65rem;
+  justify-content: center;
+  cursor: pointer;
 }
 
 .action-btn-secondary:hover {
