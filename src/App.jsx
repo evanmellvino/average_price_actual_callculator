@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
-import { Calculator, RefreshCw, FileText, Sun, Moon, TrendingUp, Plus, Trash2, Copy, Share2, Download, HelpCircle, History, BookmarkPlus, ShieldCheck, Star, FlaskConical } from "lucide-react";
+import { Calculator, RefreshCw, FileText, Sun, Moon, TrendingUp, Plus, Share2, Download, HelpCircle, History, BookmarkPlus, ShieldCheck, Star, FlaskConical } from "lucide-react";
 import { useStore } from "./store.js";
 import { EXAMPLE_DATA, EMPTY_FORM, parseNumber, validateForm, calculateScenarios, SECTOR_PRESETS } from "./calculator.js";
 import { generateShareURL, parseShareURL, copyToClipboard, exportAsPNG } from "./exportUtils.js";
@@ -35,9 +35,6 @@ export default function App() {
   const activeStockId = useStore((s) => s.activeStockId);
   const addStock = useStore((s) => s.addStock);
   const setActiveStock = useStore((s) => s.setActiveStock);
-  const deleteStock = useStore((s) => s.deleteStock);
-  const duplicateStock = useStore((s) => s.duplicateStock);
-  const renameStock = useStore((s) => s.renameStock);
   const updateStock = useStore((s) => s.updateStock);
   const updateStockForm = useStore((s) => s.updateStockForm);
   const updateStockUnit = useStore((s) => s.updateStockUnit);
@@ -47,8 +44,6 @@ export default function App() {
   const watchlist = stocks.filter((stock) => stock.isWatched);
 
   // Local state
-  const [editingName, setEditingName] = useState(null);
-  const [editNameValue, setEditNameValue] = useState("");
   const [shareMessage, setShareMessage] = useState("");
   const [shareLink, setShareLink] = useState("");
   const [sectorByStock, setSectorByStock] = useState({});
@@ -460,19 +455,6 @@ export default function App() {
     exportAsPNG("results-container", `${activeStock.name}.png`);
   }, [activeStock]);
 
-  // Rename handler
-  const startRename = (id, currentName) => {
-    setEditingName(id);
-    setEditNameValue(currentName);
-  };
-
-  const finishRename = (id) => {
-    if (editNameValue.trim()) {
-      renameStock(id, editNameValue.trim());
-    }
-    setEditingName(null);
-  };
-
   const handleSignOut = async () => {
     if (!supabase) return;
     const { error } = await supabase.auth.signOut();
@@ -617,35 +599,6 @@ export default function App() {
                 >
                   {stock.name}
                 </button>
-                <div className="tab-actions">
-                  <button
-                    type="button"
-                    title="Rename"
-                    aria-label={`Ubah nama ${stock.name}`}
-                    onClick={() => startRename(stock.id, stock.name)}
-                    className="tab-icon"
-                  >
-                    ✎
-                  </button>
-                  <button
-                    type="button"
-                    title="Duplicate"
-                    aria-label={`Duplikat ${stock.name}`}
-                    onClick={() => duplicateStock(stock.id)}
-                    className="tab-icon"
-                  >
-                    <Copy size={12} />
-                  </button>
-                  <button
-                    type="button"
-                    title="Delete"
-                    aria-label={`Hapus ${stock.name}`}
-                    onClick={() => deleteStock(stock.id)}
-                    className="tab-icon danger"
-                  >
-                    <Trash2 size={12} />
-                  </button>
-                </div>
               </div>
             ))}
           </div>
@@ -660,6 +613,23 @@ export default function App() {
             </button>
           </div>
         </div>
+
+        {activeStock && (
+          <section className="card issuer-name-card">
+            <h2 className="section-title"><FileText size={18} /> Nama emiten</h2>
+            <label className="field-wrap">
+              <span className="input-label">Nama / kode saham</span>
+              <input
+                className="input-field"
+                type="text"
+                maxLength={80}
+                value={activeStock.name}
+                onChange={(event) => updateStock(activeStockId, { name: event.target.value })}
+                placeholder="Contoh: BBCA atau Bank Central Asia"
+              />
+            </label>
+          </section>
+        )}
 
         <section className="workspace-tools card" aria-labelledby="workspace-tools-title">
           <div className="workspace-tools-heading">
@@ -786,38 +756,6 @@ export default function App() {
           }
           removeHistorySnapshot(id);
         }} />}
-
-        {/* Rename Modal */}
-        {editingName && (
-          <div className="modal-overlay">
-            <div className="modal-content">
-              <h3>Rename Stock</h3>
-              <input
-                type="text"
-                value={editNameValue}
-                onChange={(e) => setEditNameValue(e.target.value)}
-                className="input-field"
-                placeholder="New name..."
-              />
-              <div className="modal-actions">
-                <button
-                  type="button"
-                  onClick={() => finishRename(editingName)}
-                  className="action-btn"
-                >
-                  Save
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setEditingName(null)}
-                  className="action-btn-secondary"
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
 
         {!activeStock ? (
           <div className="card p-8 text-center">
