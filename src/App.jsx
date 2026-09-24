@@ -61,7 +61,6 @@ export default function App() {
   const [watchlistReasonOpen, setWatchlistReasonOpen] = useState(false);
   const [watchlistReason, setWatchlistReason] = useState("");
   const lastHistorySignature = useRef("");
-  const autoHistoryTimer = useRef(null);
 
   useEffect(() => {
     if (!hasSupabaseConfig) {
@@ -303,7 +302,7 @@ export default function App() {
     });
     setWatchlistReasonOpen(false);
   };
-  const saveActiveHistory = useCallback(({ force = false } = {}) => {
+  const saveActiveHistory = useCallback(() => {
     if (!activeStock || !scenarios[0]) return false;
     const scenario = scenarios[0];
     const createdAt = new Date().toISOString();
@@ -320,7 +319,11 @@ export default function App() {
       unit: activeStock.unit ?? "miliar",
       customPbv: activeStock.customPbv ?? "",
     });
-    if (!force && lastHistorySignature.current === signature) return false;
+    if (lastHistorySignature.current === signature) {
+      setHistoryNotice("Hasil dengan input dan asumsi yang sama sudah ada di riwayat.");
+      window.setTimeout(() => setHistoryNotice(""), 5000);
+      return false;
+    }
     lastHistorySignature.current = signature;
     const localId = globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`;
     const snapshot = {
@@ -370,39 +373,10 @@ export default function App() {
       setCalculationNotice("Periksa kembali data wajib dan asumsi valuasi yang belum valid.");
       return;
     }
-    saveActiveHistory({ force: true });
-    setCalculationNotice("Valuasi berhasil dihitung. Hasil terlihat di panel sebelah.");
+    setCalculationNotice("Valuasi berhasil dihitung. Jika ingin menyimpannya, tekan ‘Simpan riwayat’ di bawah hasil.");
     document.getElementById("results-container")?.scrollIntoView({ behavior: "smooth", block: "start" });
     window.setTimeout(() => setCalculationNotice(""), 4500);
   };
-  useEffect(() => {
-    if (!activeStock || !canCalculate || !scenarios.length || !session?.user?.id || loadedUserId !== session.user.id) return;
-    const signature = JSON.stringify({
-      stockId: activeStock.id,
-      stockName: activeStock.name,
-      scenarioLabel: scenarios[0]?.label,
-      averagePrice: scenarios[0]?.averagePrice,
-      currentPrice,
-      mosPrice: scenarios[0]?.marginOfSafety,
-      per: scenarios[0]?.per,
-      pbv: scenarios[0]?.pbv,
-      form: activeStock.form,
-      unit: activeStock.unit ?? "miliar",
-      customPbv: activeStock.customPbv ?? "",
-    });
-    if (lastHistorySignature.current === signature) return;
-    if (autoHistoryTimer.current) window.clearTimeout(autoHistoryTimer.current);
-    autoHistoryTimer.current = window.setTimeout(() => {
-      saveActiveHistory();
-      autoHistoryTimer.current = null;
-    }, 1800);
-    return () => {
-      if (autoHistoryTimer.current) {
-        window.clearTimeout(autoHistoryTimer.current);
-        autoHistoryTimer.current = null;
-      }
-    };
-  }, [activeStock, canCalculate, scenarios, currentPrice, session?.user?.id, loadedUserId, saveActiveHistory]);
   const summaryScenario = scenarios[0];
   const scenarioResult = useMemo(() => {
     if (!summaryScenario) return null;
@@ -694,7 +668,7 @@ export default function App() {
               disabled={!activeStock}
             >
               <Star size={16} fill={activeStock?.isWatched ? "currentColor" : "none"} />
-              {activeStock?.isWatched ? "Di watchlist" : "Tambahkan ke watchlist"}
+              {activeStock?.isWatched ? "Sudah di watchlist" : "Tambahkan ke watchlist"}
             </button>
           </div>
           <div className="watchlist-row">
@@ -805,7 +779,7 @@ export default function App() {
                 <span className="thesis-counter">{watchlistReason.length}/500</span>
               </label>
               <div className="modal-actions">
-                <button type="button" className="action-btn" onClick={saveWatchlistReason}>Simpan ke watchlist</button>
+                <button type="button" className="action-btn" onClick={saveWatchlistReason}>Konfirmasi & simpan</button>
                 <button type="button" className="action-btn-secondary" onClick={() => setWatchlistReasonOpen(false)}>Batal</button>
               </div>
             </section>
@@ -1045,14 +1019,16 @@ export default function App() {
                   <span>Reset</span>
                 </button>
               </div>
-              <button
-                type="button"
-                className={activeStock.isWatched ? "action-btn-secondary watchlist-save-button" : "action-btn watchlist-save-button"}
-                onClick={toggleWatchlist}
-              >
-                <Star size={17} fill={activeStock.isWatched ? "currentColor" : "none"} />
-                {activeStock.isWatched ? "Tersimpan di watchlist · Hapus dari watchlist" : "Simpan ke watchlist"}
-              </button>
+              {!activeStock.isWatched && (
+                <button
+                  type="button"
+                  className="action-btn watchlist-save-button"
+                  onClick={toggleWatchlist}
+                >
+                  <Star size={17} />
+                  Simpan ke watchlist
+                </button>
+              )}
             </div>
 
             {/* RIGHT: Results */}
@@ -1185,7 +1161,7 @@ export default function App() {
                   <ComparisonChart scenarios={scenarios} currentPrice={currentPrice} />
 
                   <div className="card result-actions">
-                    <button type="button" className="action-btn flex-1" onClick={saveActiveHistory}>
+                    <button type="button" className="action-btn flex-1" onClick={saveActiveHistory} disabled={!canCalculate || !scenarios.length}>
                       <BookmarkPlus size={16} />
                       Simpan riwayat
                     </button>
