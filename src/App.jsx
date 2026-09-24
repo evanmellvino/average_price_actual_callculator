@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { Calculator, RefreshCw, FileText, Sun, Moon, TrendingUp, Plus, Share2, Download, HelpCircle, History, BookmarkPlus, ShieldCheck, Star, FlaskConical } from "lucide-react";
 import { useStore } from "./store.js";
 import { EXAMPLE_DATA, EMPTY_FORM, parseNumber, validateForm, calculateScenarios, SECTOR_PRESETS } from "./calculator.js";
@@ -57,6 +57,7 @@ export default function App() {
   const [scenarioPbv, setScenarioPbv] = useState("");
   const [scenarioGrowth, setScenarioGrowth] = useState("0");
   const [calculationNotice, setCalculationNotice] = useState("");
+  const lastHistorySignature = useRef("");
 
   useEffect(() => {
     if (!hasSupabaseConfig) {
@@ -288,16 +289,20 @@ export default function App() {
     if (!activeStock || !scenarios[0]) return false;
     const scenario = scenarios[0];
     const createdAt = new Date().toISOString();
-    const existing = useStore.getState().history.find((item) =>
-      item.stockId === activeStock.id &&
-      item.scenarioLabel === scenario.label &&
-      item.averagePrice === scenario.averagePrice &&
-      item.currentPrice === currentPrice &&
-      item.per === scenario.per &&
-      item.pbv === scenario.pbv &&
-      Date.now() - new Date(item.createdAt).getTime() < 30_000
-    );
-    if (existing) return false;
+    const signature = JSON.stringify({
+      stockId: activeStock.id,
+      stockName: activeStock.name,
+      scenarioLabel: scenario.label,
+      averagePrice: scenario.averagePrice,
+      currentPrice,
+      mosPrice: scenario.marginOfSafety,
+      per: scenario.per,
+      pbv: scenario.pbv,
+      form: activeStock.form,
+      unit: activeStock.unit ?? "miliar",
+    });
+    if (lastHistorySignature.current === signature) return false;
+    lastHistorySignature.current = signature;
     const localId = globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2)}`;
     const snapshot = {
       id: localId,
@@ -350,9 +355,22 @@ export default function App() {
   };
   useEffect(() => {
     if (!activeStock || !canCalculate || !scenarios.length || !session?.user?.id || loadedUserId !== session.user.id) return;
+    const signature = JSON.stringify({
+      stockId: activeStock.id,
+      stockName: activeStock.name,
+      scenarioLabel: scenarios[0]?.label,
+      averagePrice: scenarios[0]?.averagePrice,
+      currentPrice,
+      mosPrice: scenarios[0]?.marginOfSafety,
+      per: scenarios[0]?.per,
+      pbv: scenarios[0]?.pbv,
+      form: activeStock.form,
+      unit: activeStock.unit ?? "miliar",
+    });
+    if (lastHistorySignature.current === signature) return;
     const timeout = window.setTimeout(() => saveActiveHistory(), 1800);
     return () => window.clearTimeout(timeout);
-  }, [activeStock, canCalculate, scenarios, session?.user?.id, loadedUserId, saveActiveHistory]);
+  }, [activeStock, canCalculate, scenarios, currentPrice, session?.user?.id, loadedUserId, saveActiveHistory]);
   const summaryScenario = scenarios[0];
   const scenarioResult = useMemo(() => {
     if (!summaryScenario) return null;
