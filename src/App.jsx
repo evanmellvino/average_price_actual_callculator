@@ -590,7 +590,7 @@ export default function App() {
         {authNotice && <p className="auth-notice global-auth-notice" role="status">{authNotice}</p>}
         <div className="stock-tabs">
           <div className="tabs-scroll">
-      {stocks.map((stock) => (
+            {stocks.filter((stock) => stock.name.trim()).map((stock) => (
               <div key={stock.id} className={`stock-tab ${activeStockId === stock.id ? "active" : ""}`}>
                 <button
                   type="button"
