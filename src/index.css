@@ -1057,15 +1057,367 @@ body {
   }
 }
 
+@media (max-width: 640px) {
+  html,
+  body,
+  #root {
+    width: 100%;
+    min-width: 320px;
+    overflow-x: hidden;
+  }
+
+  .container-main {
+    width: 100%;
+    padding: 1rem 0.875rem 1.5rem;
+    gap: 1rem;
+  }
+
+  .header-inner {
+    padding: 0.65rem 0.875rem;
+    gap: 0.5rem;
+  }
+
+  .brand {
+    min-width: 0;
+    gap: 0.6rem;
+  }
+
+  .brand-icon {
+    width: 2.35rem;
+    height: 2.35rem;
+    flex: 0 0 auto;
+  }
+
+  .brand-title {
+    font-size: 0.97rem;
+    line-height: 1.2;
+  }
+
+  .brand-subtitle {
+    max-width: 14rem;
+    margin-top: 0.15rem;
+    font-size: 0.64rem;
+    line-height: 1.35;
+  }
+
+  .header-actions {
+    flex: 0 0 auto;
+    gap: 0.35rem;
+  }
+
+  .header-btn {
+    width: 2.35rem;
+    height: 2.35rem;
+  }
+
+  .signout-btn {
+    min-height: 2.35rem;
+    padding: 0.45rem 0.65rem;
+    font-size: 0.75rem;
+  }
+
+  .disclaimer {
+    padding: 0.75rem 0.85rem;
+    font-size: 0.75rem;
+    line-height: 1.5;
+  }
+
+  .stock-tabs {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 0.65rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .tabs-scroll {
+    width: 100%;
+    padding: 0.15rem 0.05rem 0.45rem;
+  }
+
+  .stock-tabs-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+  }
+
+  .stock-tabs-actions > button {
+    justify-content: center;
+    min-height: 2.75rem;
+    padding-inline: 0.6rem;
+  }
+
+  .stock-tab {
+    gap: 0.35rem;
+    padding: 0.45rem 0.55rem;
+  }
+
+  .tab-label {
+    max-width: 8rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.76rem;
+  }
+
+  .tab-actions {
+    gap: 0.05rem;
+  }
+
+  .tab-icon {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+
+  .grid-form-results {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .grid-form-results > div {
+    min-width: 0;
+  }
+
+  .card,
+  .chart-card,
+  .scenario-card {
+    min-width: 0;
+    padding: 1rem;
+    border-radius: 1rem;
+  }
+
+  .section-title {
+    gap: 0.5rem;
+    margin-bottom: 0.85rem;
+    font-size: 1rem;
+    line-height: 1.3;
+  }
+
+  .grid-form-results .grid {
+    gap: 0.85rem;
+  }
+
+  .input-field,
+  .select-field {
+    min-height: 2.85rem;
+    font-size: 16px;
+  }
+
+  .field-suffix {
+    right: 0.7rem;
+    font-size: 0.68rem;
+  }
+
+  .field-wrap {
+    min-width: 0;
+  }
+
+  .unit-btn {
+    min-height: 2.4rem;
+    padding-inline: 0.85rem;
+  }
+
+  .summary-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem;
+    margin-top: 0.85rem;
+  }
+
+  .summary-metric {
+    gap: 0.35rem;
+    padding: 0.75rem;
+    border-radius: 0.75rem;
+  }
+
+  .summary-metric span {
+    font-size: 0.66rem;
+    line-height: 1.35;
+  }
+
+  .summary-metric strong {
+    font-size: 0.86rem;
+  }
+
+  .valuation-summary-heading,
+  .market-comparison-heading {
+    align-items: flex-start;
+  }
+
+  .summary-scenario-tag,
+  .market-status-pill {
+    max-width: 100%;
+    font-size: 0.67rem;
+  }
+
+  .market-price-labels {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .results-header {
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .results-title {
+    font-size: 0.92rem;
+  }
+
+  .results-subtitle {
+    text-align: right;
+    font-size: 0.68rem;
+  }
+
+  .per-saham-grid {
+    gap: 0.4rem;
+  }
+
+  .per-saham-item {
+    padding: 0.6rem 0.3rem;
+    overflow-wrap: anywhere;
+  }
+
+  .per-saham-value {
+    font-size: 0.78rem;
+  }
+
+  .fair-value-grid {
+    gap: 0.55rem;
+  }
+
+  .fv-card {
+    min-width: 0;
+    padding: 0.7rem;
+  }
+
+  .fv-label {
+    min-height: 2rem;
+    font-size: 0.66rem;
+    line-height: 1.35;
+  }
+
+  .fv-value {
+    font-size: 0.95rem;
+    overflow-wrap: anywhere;
+  }
+
+  .avg-price-card {
+    padding: 0.9rem 0.65rem;
+  }
+
+  .avg-label {
+    font-size: 0.7rem;
+  }
+
+  .average-price-amount,
+  .avg-value {
+    font-size: clamp(1.35rem, 7vw, 1.8rem);
+    overflow-wrap: anywhere;
+  }
+
+  .metrics-grid {
+    gap: 0.5rem;
+  }
+
+  .metric-item {
+    min-width: 0;
+    padding: 0.65rem;
+    overflow-wrap: anywhere;
+  }
+
+  .metric-label,
+  .metric-value {
+    font-size: 0.7rem;
+    line-height: 1.35;
+  }
+
+  .status-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .status-badge {
+    flex-wrap: wrap;
+    font-size: 0.66rem;
+  }
+
+  .chart-card {
+    padding: 1rem 0.75rem;
+  }
+
+  .chart-title {
+    font-size: 1rem;
+  }
+
+  .chart-subtitle {
+    max-width: 15rem;
+    line-height: 1.4;
+  }
+
+  .chart-legend {
+    gap: 0.45rem 0.75rem;
+    margin-top: 0.9rem;
+  }
+
+  .chart-legend-item {
+    font-size: 0.66rem;
+  }
+
+  .chart-plot {
+    height: 260px;
+    margin-left: -0.35rem;
+  }
+
+  .result-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.55rem;
+  }
+
+  .result-actions button,
+  #results-container > .card.flex button {
+    min-height: 2.75rem;
+    justify-content: center;
+  }
+
+  .history-panel {
+    margin: 0 0 0.5rem;
+  }
+
+  .history-item {
+    padding: 0.7rem;
+  }
+
+  .history-values {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .modal-content {
+    max-height: calc(100dvh - 2rem);
+    overflow-y: auto;
+    padding: 1.15rem;
+  }
+
+  .footer {
+    margin-top: 1.25rem;
+    padding: 1.2rem 1rem;
+    line-height: 1.5;
+  }
+}
+
 /* === Stock Tabs === */
 .stock-tabs {
-  @apply flex items-center gap-3 overflow-x-auto pb-2 mb-6;
+  @apply flex items-center gap-3 pb-2 mb-6;
+  min-width: 0;
 }
 
 .tabs-scroll {
   @apply flex gap-2 flex-1;
   min-width: 0;
   overflow-x: auto;
+  scrollbar-width: thin;
 }
 
 .stock-tab {
@@ -1073,6 +1425,7 @@ body {
   background: var(--btn-secondary);
   border: 1px solid transparent;
   flex: 0 0 auto;
+  max-width: 100%;
 }
 
 .stock-tab.active {
