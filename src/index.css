@@ -930,6 +930,32 @@ body {
   gap: 0;
 }
 
+.stock-controls {
+  width: 100%;
+  min-width: 0;
+}
+
+.stock-control-actions {
+  display: grid;
+  width: 100%;
+  gap: 0.5rem;
+}
+
+.stock-control-actions > button {
+  display: flex;
+  width: 100%;
+  min-height: 3.25rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  font-weight: 750;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
 .stock-tabs-no-names .tabs-scroll {
   display: none;
 }
@@ -1310,33 +1336,39 @@ body {
     padding: 0;
   }
 
+  .stock-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .stock-tabs {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .stock-control-actions {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .stock-control-actions > button {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 3.25rem;
+    margin: 0;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+  }
+
   .stock-tabs-no-names .tabs-scroll {
     display: none;
   }
 
-  .stock-tabs-actions,
-  .stock-tabs-actions .action-btn {
-    width: 100%;
-  }
-
-  .history-toggle-row,
-  .history-toggle-row .action-btn-secondary {
-    width: 100%;
-  }
-
-  .history-toggle-row {
-    margin: 0.5rem 0 0.75rem;
-  }
-
-  .stock-tabs-actions .action-btn,
-  .history-toggle-row .action-btn-secondary {
-    min-height: 3.25rem;
-    justify-content: center;
-    padding: 0.75rem 1rem;
-    border-radius: 0.75rem;
-    font-size: 1rem;
-    font-weight: 750;
-  }
 }
 
 .stock-tabs-actions .action-btn-secondary {
@@ -1759,24 +1791,6 @@ body {
   .tabs-scroll {
     width: 100%;
     padding: 0.15rem 0.05rem 0.45rem;
-  }
-
-  .stock-tabs-actions {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    width: 100%;
-    gap: 0.5rem;
-  }
-
-  .stock-tabs-actions > button {
-    display: flex;
-    width: 100%;
-    justify-content: center;
-    min-height: 3.25rem;
-    padding: 0.75rem 1rem;
-    font-size: 1rem;
-    font-weight: 750;
   }
 
   .stock-tab {

@@ -629,8 +629,9 @@ export default function App() {
 
         {/* Stock Tabs */}
         {authNotice && <p className="auth-notice global-auth-notice" role="status">{authNotice}</p>}
-        <div className={`stock-tabs ${namedStocks.length === 0 ? "stock-tabs-no-names" : ""}`}>
-          <div className="tabs-scroll">
+        <div className="stock-controls">
+          <div className={`stock-tabs ${namedStocks.length === 0 ? "stock-tabs-no-names" : ""}`}>
+            <div className="tabs-scroll">
             {namedStocks.map((stock) => (
               <div key={stock.id} className={`stock-tab ${activeStockId === stock.id ? "active" : ""}`}>
                 <button
@@ -642,20 +643,18 @@ export default function App() {
                 </button>
               </div>
             ))}
+            </div>
           </div>
-          <div className="stock-tabs-actions">
+          <div className="stock-control-actions">
             <button type="button" onClick={addStock} className="action-btn" title="Add new stock">
               <Plus size={16} />
               <span>Tambah saham</span>
             </button>
+            <button type="button" onClick={() => setHistoryOpen((open) => !open)} className="action-btn-secondary" aria-expanded={historyOpen} aria-controls="calculation-history-panel">
+              <History size={16} />
+              <span>{historyOpen ? "Sembunyikan" : "Tampilkan"} riwayat ({history.length})</span>
+            </button>
           </div>
-        </div>
-
-        <div className="history-toggle-row">
-          <button type="button" onClick={() => setHistoryOpen((open) => !open)} className="action-btn-secondary" aria-expanded={historyOpen} aria-controls="calculation-history-panel">
-            <History size={16} />
-            <span>{historyOpen ? "Sembunyikan" : "Tampilkan"} riwayat ({history.length})</span>
-          </button>
         </div>
         {historyOpen && <div id="calculation-history-panel"><HistoryPanel history={history} onOpen={openHistoryCalculation} onDelete={async (id) => {
           const { error } = await supabase.from("calculation_history").delete().eq("id", id).eq("user_id", session.user.id);
