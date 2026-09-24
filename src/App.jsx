@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { Calculator, RefreshCw, FileText, Sun, Moon, TrendingUp, Plus, Trash2, Copy, Share2, Download, HelpCircle, History, BookmarkPlus, ShieldCheck, Star, FlaskConical } from "lucide-react";
 import { useStore } from "./store.js";
-import { EXAMPLE_DATA, parseNumber, validateForm, calculateScenarios, SECTOR_PRESETS } from "./calculator.js";
+import { EXAMPLE_DATA, EMPTY_FORM, parseNumber, validateForm, calculateScenarios, SECTOR_PRESETS } from "./calculator.js";
 import { generateShareURL, parseShareURL, copyToClipboard, exportAsPNG } from "./exportUtils.js";
 import { UnitSwitcher } from "./components/UnitSwitcher.jsx";
 import { NumericField } from "./components/NumericField.jsx";
@@ -314,6 +314,8 @@ export default function App() {
       mosPrice: scenario.marginOfSafety,
       per: scenario.per,
       pbv: scenario.pbv,
+      form: activeStock.form,
+      unit: activeStock.unit ?? "miliar",
     };
     saveHistorySnapshot(snapshot);
     if (supabase && session?.user?.id) {
@@ -382,6 +384,35 @@ export default function App() {
     currency: "IDR",
     maximumFractionDigits: 2,
   }).format(value || 0);
+
+  const openStockCalculation = (stockId) => {
+    const exists = useStore.getState().stocks.some((stock) => stock.id === stockId);
+    if (exists) {
+      setActiveStock(stockId);
+      setWatchlistOpen(false);
+      setHistoryOpen(false);
+      window.setTimeout(() => document.getElementById("results-container")?.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
+    }
+  };
+
+  const openHistoryCalculation = (item) => {
+    const stock = useStore.getState().stocks.find((entry) => entry.id === item.stockId);
+    if (stock) {
+      openStockCalculation(stock.id);
+      return;
+    }
+    const id = addStock();
+    updateStock(id, {
+      name: item.stockName || "Saham dari riwayat",
+      per: item.per ?? 10,
+      pbv: item.pbv ?? 1,
+      customPbv: item.pbv >= 4 ? String(item.pbv) : "",
+      form: { ...EMPTY_FORM, ...(item.form ?? {}) },
+      unit: item.unit ?? "miliar",
+    });
+    setHistoryOpen(false);
+    window.setTimeout(() => document.getElementById("results-container")?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
+  };
 
   const watchlistComparisons = useMemo(() => watchlist.map((stock) => {
     const customPbvMode = Number(stock.pbv) === 4;
@@ -684,11 +715,19 @@ export default function App() {
                     <button
                       type="button"
                       key={stock.id}
-                      className={`watchlist-item ${stock.id === activeStockId ? "active" : ""}`}
-                      onClick={() => setActiveStock(stock.id)}
-                    >
-                      <span>{stock.name}</span>
-                      <strong>{parseNumber(stock.form?.hargaSaham) > 0 ? formatCurrency(parseNumber(stock.form.hargaSaham)) : "Harga belum diisi"}</strong>
+                    className={`watchlist-item ${stock.id === activeStockId ? "active" : ""}`}
+                    onClick={() => openStockCalculation(stock.id)}
+                  >
+                    <span>{stock.name}</span>
+                    <span className="watchlist-price-details">
+                      <span>Harga sekarang <strong>{parseNumber(stock.form?.hargaSaham) > 0 ? formatCurrency(parseNumber(stock.form.hargaSaham)) : "Belum diisi"}</strong></span>
+                      <span>Harga aktual <strong>{(() => {
+                        const rawPbv = parseNumber(stock.pbv);
+                        const customPbvMode = rawPbv === 4 && !Object.values(SECTOR_PRESETS).some((preset) => preset.defaultPbv === rawPbv);
+                        const rowScenarios = calculateScenarios({ form: stock.form, unit: stock.unit ?? "miliar", per: parseNumber(stock.per) || 10, pbvChoice: customPbvMode ? 4 : rawPbv, customPbv: customPbvMode ? stock.customPbv : String(rawPbv) });
+                        return rowScenarios[0] ? formatCurrency(rowScenarios[0].averagePrice) : "Belum bisa dihitung";
+                      })()}</strong></span>
+                    </span>
                     </button>
                   ))}
                 </div>
@@ -717,7 +756,7 @@ export default function App() {
                           {watchlistComparisons.map((item) => (
                             <tr key={item.id}>
                               <th scope="row">
-                                <button type="button" className="watchlist-symbol-button" onClick={() => setActiveStock(item.id)}>{item.name}</button>
+                              <button type="button" className="watchlist-symbol-button" onClick={() => openStockCalculation(item.id)}>{item.name}</button>
                               </th>
                               <td>{item.currentPrice > 0 ? formatCurrency(item.currentPrice) : "—"}</td>
                               <td>{item.scenario ? formatCurrency(item.scenario.averagePrice) : "Data belum lengkap"}</td>
@@ -739,7 +778,7 @@ export default function App() {
           </div>
         </section>
 
-        {historyOpen && <HistoryPanel history={history} onDelete={async (id) => {
+        {historyOpen && <HistoryPanel history={history} onOpen={openHistoryCalculation} onDelete={async (id) => {
           const { error } = await supabase.from("calculation_history").delete().eq("id", id).eq("user_id", session.user.id);
           if (error) {
             setHistoryNotice(`Gagal menghapus riwayat: ${error.message}`);

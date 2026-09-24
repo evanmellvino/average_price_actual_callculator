@@ -1105,6 +1105,22 @@ body {
   font-weight: 700;
 }
 
+.watchlist-item .watchlist-price-details {
+  display: grid;
+  width: 100%;
+  gap: 0.3rem;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+
+.watchlist-price-details > span {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
 .watchlist-item strong {
   color: var(--text-muted);
   font-size: 0.75rem;
@@ -1304,6 +1320,17 @@ body {
   background: var(--page-elevated);
 }
 
+.history-item-clickable {
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease;
+}
+
+.history-item-clickable:hover,
+.history-item-clickable:focus-visible {
+  border-color: var(--text-accent);
+  outline: none;
+}
+
 .history-item-main {
   min-width: 0;
   flex: 1;
@@ -1317,6 +1344,13 @@ body {
 
 .history-item-title strong {
   color: var(--text);
+}
+
+.history-open-hint {
+  margin-left: 0.5rem;
+  color: var(--text-accent);
+  font-size: 0.68rem;
+  font-weight: 600;
 }
 
 .history-values {
