@@ -60,6 +60,7 @@ export default function App() {
   const [scenarioPer, setScenarioPer] = useState("");
   const [scenarioPbv, setScenarioPbv] = useState("");
   const [scenarioGrowth, setScenarioGrowth] = useState("0");
+  const [calculationNotice, setCalculationNotice] = useState("");
 
   useEffect(() => {
     if (!hasSupabaseConfig) {
@@ -285,6 +286,15 @@ export default function App() {
   const toggleWatchlist = () => {
     if (!activeStock) return;
     updateStock(activeStockId, { isWatched: !activeStock.isWatched });
+  };
+  const handleCalculate = () => {
+    if (!canCalculate || !scenarios.length) {
+      setCalculationNotice("Periksa kembali data wajib dan asumsi valuasi yang belum valid.");
+      return;
+    }
+    setCalculationNotice("Valuasi berhasil dihitung. Hasil terlihat di panel sebelah.");
+    document.getElementById("results-container")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    window.setTimeout(() => setCalculationNotice(""), 4500);
   };
   const saveActiveHistory = useCallback(() => {
     if (!activeStock || !scenarios[0]) return;
@@ -929,6 +939,16 @@ export default function App() {
               </section>
 
               {/* Actions */}
+              <button
+                type="button"
+                className="action-btn calculate-button"
+                onClick={handleCalculate}
+                disabled={!canCalculate || !scenarios.length}
+              >
+                <Calculator size={18} />
+                <span>Hitung valuasi</span>
+              </button>
+              {calculationNotice && <p className="calculation-notice" role="status">{calculationNotice}</p>}
               <div className="flex gap-2">
                 <button
                   type="button"
