@@ -1287,6 +1287,14 @@ body {
     grid-template-columns: 1fr;
   }
 
+  .stock-tabs-actions {
+    flex-wrap: wrap;
+  }
+
+  .stock-tabs-actions .action-btn-secondary {
+    min-height: 2.65rem;
+  }
+
   .scenario-output {
     grid-column: auto;
   }
@@ -1299,7 +1307,7 @@ body {
 }
 
 .history-panel {
-  margin: -1rem 0 1.5rem;
+  margin: 0.35rem 0 0.75rem;
   border-top: 3px solid var(--text-blue);
 }
 

@@ -650,7 +650,7 @@ export default function App() {
             </button>
             <button type="button" onClick={() => setHistoryOpen((open) => !open)} className="action-btn-secondary" title="Lihat riwayat">
               <History size={16} />
-              <span>Riwayat ({history.length})</span>
+              <span>{historyOpen ? "Sembunyikan" : "Tampilkan"} riwayat ({history.length})</span>
             </button>
           </div>
         </div>
