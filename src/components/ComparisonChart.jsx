@@ -12,8 +12,8 @@ import {
 
 const SERIES = [
   { key: "Fair Value PER", color: "var(--text-accent)" },
-  { key: "Fair Value PBV", color: "var(--text-blue)" },
-  { key: "Average Price", color: "var(--text-amber)" },
+  { key: "Fair Value PBV", color: "var(--text-muted)" },
+  { key: "Average Price", color: "var(--text-blue)" },
   { key: "Harga Saham", color: "var(--text-red)" },
 ];
 
