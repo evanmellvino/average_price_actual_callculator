@@ -837,21 +837,6 @@ export default function App() {
             {/* LEFT: Input Form */}
             <div>
               {/* Step 1: Laba */}
-        <section className="card issuer-name-card">
-          <h2 className="section-title"><FileText size={18} /> Nama emiten</h2>
-          <label className="field-wrap">
-            <span className="input-label">Nama / kode saham</span>
-            <input
-              className="input-field"
-              type="text"
-              maxLength={80}
-              value={activeStock.name}
-              onChange={(event) => updateStock(activeStockId, { name: event.target.value })}
-              placeholder="Contoh: BBCA atau Bank Central Asia"
-            />
-          </label>
-        </section>
-
         <section className="card">
                   <h2 className="section-title">
                   <TrendingUp size={18} />

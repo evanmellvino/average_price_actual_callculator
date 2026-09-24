@@ -1215,10 +1215,6 @@ body {
   color: var(--text-red);
 }
 
-.issuer-name-card {
-  margin-bottom: 1rem;
-}
-
 .watchlist-save-button {
   display: flex;
   width: 100%;
