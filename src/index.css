@@ -1611,12 +1611,14 @@ body {
   justify-content: center;
   margin-top: 0.75rem;
   padding-block: 0.75rem;
-  background: var(--btn-primary);
-  color: #ffffff;
+  background: var(--btn-primary) !important;
+  color: #ffffff !important;
+  border: 1px solid var(--btn-primary) !important;
 }
 
 .auth-submit:hover {
-  background: var(--btn-primary-hover);
+  background: var(--btn-primary-hover) !important;
+  border-color: var(--btn-primary-hover) !important;
 }
 
 .auth-submit:disabled {
