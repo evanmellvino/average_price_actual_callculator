@@ -2,7 +2,7 @@ import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import { Calculator, RefreshCw, FileText, Sun, Moon, TrendingUp, Plus, Share2, Download, HelpCircle, History, BookmarkPlus, ShieldCheck, Star, FlaskConical } from "lucide-react";
 import { useStore } from "./store.js";
 import { EXAMPLE_DATA, EMPTY_FORM, parseNumber, validateForm, calculateScenarios, SECTOR_PRESETS } from "./calculator.js";
-import { generateShareURL, parseShareURL, copyToClipboard, exportAsPNG } from "./exportUtils.js";
+import { generateShareURL, parseShareURL, copyToClipboard, exportSummaryAsJPG } from "./exportUtils.js";
 import { UnitSwitcher } from "./components/UnitSwitcher.jsx";
 import { NumericField } from "./components/NumericField.jsx";
 import { PerPbvSelector } from "./components/PerPbvSelector.jsx";
@@ -10,6 +10,7 @@ import { ResultCard } from "./components/ResultCard.jsx";
 import { ComparisonChart } from "./components/ComparisonChart.jsx";
 import { HistoryPanel } from "./components/HistoryPanel.jsx";
 import { AuthScreen } from "./components/AuthScreen.jsx";
+import { ExportSummary } from "./components/ExportSummary.jsx";
 import { hasSupabaseConfig, supabase } from "./lib/supabase.js";
 import "./index.css";
 
@@ -492,9 +493,9 @@ export default function App() {
 
   // Export handler
   const handleExport = useCallback(() => {
-    if (!activeStock) return;
-    exportAsPNG("results-container", `${activeStock.name}.png`);
-  }, [activeStock]);
+    if (!activeStock || !scenarios[0]) return;
+    exportSummaryAsJPG("export-summary-container", `${activeStock.name.replace(/[^a-zA-Z0-9]/g, "_")}.jpg`);
+  }, [activeStock, scenarios]);
 
   const handleSignOut = async () => {
     if (!supabase) return;
@@ -1179,9 +1180,10 @@ export default function App() {
                       type="button"
                       className="action-btn flex-1"
                       onClick={handleExport}
+                      disabled={!scenarios[0]}
                     >
                       <Download size={16} />
-                      Export PNG
+                      Export JPG
                     </button>
                     <button
                       type="button"
@@ -1227,6 +1229,18 @@ export default function App() {
             </ol>
             <button type="button" className="action-btn" autoFocus onClick={() => setTutorialOpen(false)}>Saya mengerti</button>
           </section>
+        </div>
+      )}
+      {/* Hidden Export Summary for JPG capture */}
+      {activeStock && scenarios[0] && (
+        <div style={{ position: "fixed", left: "-9999px", top: "-9999px", width: "800px" }}>
+          <div id="export-summary-container">
+            <ExportSummary
+              stock={activeStock}
+              scenario={scenarios[0]}
+              currentPrice={currentPrice}
+            />
+          </div>
         </div>
       )}
     </div>

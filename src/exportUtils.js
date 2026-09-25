@@ -1,18 +1,20 @@
 import html2canvas from "html2canvas";
 
-// Export hasil sebagai gambar PNG
-export async function exportAsPNG(elementId, filename = "stock-valuation.png") {
+// Export rangkuman saham sebagai JPG
+export async function exportSummaryAsJPG(elementId, filename = "stock-summary.jpg") {
   try {
     const element = document.getElementById(elementId);
     if (!element) throw new Error("Element not found");
 
     const canvas = await html2canvas(element, {
-      backgroundColor: getComputedStyle(element).getPropertyValue("--page-elevated").trim() || "#ffffff",
+      backgroundColor: "#ffffff",
       scale: 2,
       logging: false,
+      useCORS: true,
+      allowTaint: true,
     });
 
-    const dataUrl = canvas.toDataURL("image/png");
+    const dataUrl = canvas.toDataURL("image/jpeg", 0.92);
     const link = document.createElement("a");
     link.download = filename;
     link.href = dataUrl;
@@ -22,7 +24,7 @@ export async function exportAsPNG(elementId, filename = "stock-valuation.png") {
 
     return true;
   } catch (error) {
-    console.error("Export PNG error:", error);
+    console.error("Export JPG error:", error);
     return false;
   }
 }
