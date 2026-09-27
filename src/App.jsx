@@ -494,8 +494,11 @@ export default function App() {
   // Export handler
   const handleExport = useCallback(() => {
     if (!activeStock || !scenarios[0]) return;
-    exportSummaryAsJPG("export-summary-container", `${activeStock.name.replace(/[^a-zA-Z0-9]/g, "_")}.jpg`);
-  }, [activeStock, scenarios]);
+    exportSummaryAsJPG(
+      { stock: activeStock, scenario: scenarios[0], currentPrice },
+      `${activeStock.name.replace(/[^a-zA-Z0-9]/g, "_")}.jpg`
+    );
+  }, [activeStock, scenarios, currentPrice]);
 
   const handleSignOut = async () => {
     if (!supabase) return;
