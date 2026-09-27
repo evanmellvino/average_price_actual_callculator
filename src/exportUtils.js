@@ -3,164 +3,137 @@ export async function exportSummaryAsJPG(stockData, filename = "stock-summary.jp
   try {
     const { stock, scenario, currentPrice } = stockData;
 
-    const W = 800;
-    const H = 480;
+    const W = 600;
+    const H = 400;
     const canvas = document.createElement("canvas");
     canvas.width = W * 2;
     canvas.height = H * 2;
     const ctx = canvas.getContext("2d");
     ctx.scale(2, 2);
 
-    const fmt = (n) => new Intl.NumberFormat("id-ID", { maximumFractionDigits: 0 }).format(n);
-    const upside = currentPrice > 0 ? ((scenario.averagePrice - currentPrice) / currentPrice) * 100 : 0;
-    const isPositive = upside >= 0;
+    const fmt = (n) => "Rp " + new Intl.NumberFormat("id-ID", { maximumFractionDigits: 0 }).format(n);
+    const upside = currentPrice > 0 ? ((scenario.averagePrice - currentPrice) / currentPrice) * 100 : null;
     const date = new Date().toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
 
-    // Background
+    // BG
     ctx.fillStyle = "#0d1117";
     ctx.fillRect(0, 0, W, H);
 
-    // Border
-    ctx.strokeStyle = "#30363d";
-    ctx.lineWidth = 1;
-    ctx.roundRect(2, 2, W - 4, H - 4, 16);
-    ctx.stroke();
-
-    // Header bar
-    ctx.fillStyle = "#161b22";
-    ctx.roundRect(0, 0, W, 60, [16, 16, 0, 0]);
-    ctx.fill();
-
-    // Brand circle
+    // Top accent bar
     ctx.fillStyle = "#2f81f7";
-    ctx.beginPath();
-    ctx.arc(36, 30, 18, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.fillRect(0, 0, W, 5);
 
-    // Brand letter
-    ctx.fillStyle = "#ffffff";
-    ctx.font = "bold 16px Arial";
-    ctx.textAlign = "center";
-    ctx.fillText("A", 36, 36);
-
-    // App name
-    ctx.fillStyle = "#e6edf3";
-    ctx.font = "bold 14px Arial";
-    ctx.textAlign = "left";
-    ctx.fillText("Average Price Calculator", 62, 26);
+    // App label
     ctx.fillStyle = "#8b949e";
     ctx.font = "11px Arial";
-    ctx.fillText("Analisis valuasi saham", 62, 42);
+    ctx.textAlign = "left";
+    ctx.fillText("AVERAGE PRICE CALCULATOR", 24, 28);
 
     // Date
-    ctx.fillStyle = "#8b949e";
-    ctx.font = "11px Arial";
     ctx.textAlign = "right";
-    ctx.fillText(date, W - 20, 34);
-
-    // Separator
-    ctx.strokeStyle = "#30363d";
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(20, 60);
-    ctx.lineTo(W - 20, 60);
-    ctx.stroke();
+    ctx.fillText(date, W - 24, 28);
 
     // Stock name
     ctx.fillStyle = "#e6edf3";
-    ctx.font = "bold 28px Arial";
+    ctx.font = "bold 34px Arial";
     ctx.textAlign = "left";
-    ctx.fillText(stock.name, 24, 100);
+    ctx.fillText(stock.name, 24, 72);
 
-    // Metric boxes
-    const metrics = [
-      { label: "Harga Sekarang", value: `Rp ${fmt(currentPrice)}`, color: "#e6edf3", bg: "#161b22" },
-      { label: "Target Harga Wajar", value: `Rp ${fmt(scenario.averagePrice)}`, color: "#2f81f7", bg: "#1a2535" },
-      { label: "Potensi", value: `${upside >= 0 ? "+" : ""}${upside.toFixed(1)}%`, color: isPositive ? "#3fb950" : "#f85149", bg: "#161b22" },
-      { label: "PER / PBV", value: `${scenario.per.toFixed(1)}x / ${scenario.pbv.toFixed(2)}x`, color: "#e6edf3", bg: "#161b22" },
-    ];
+    // Divider
+    ctx.strokeStyle = "#30363d";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(24, 84);
+    ctx.lineTo(W - 24, 84);
+    ctx.stroke();
 
-    const boxW = (W - 48 - 3 * 12) / 4;
-    metrics.forEach((m, i) => {
-      const x = 24 + i * (boxW + 12);
-      const y = 118;
-      ctx.fillStyle = m.bg;
-      ctx.roundRect(x, y, boxW, 80, 10);
-      ctx.fill();
-      ctx.strokeStyle = i === 1 ? "#2f81f7" : "#30363d";
-      ctx.lineWidth = 1;
-      ctx.roundRect(x, y, boxW, 80, 10);
-      ctx.stroke();
+    // Row 1: Harga sekarang + Target
+    const row1y = 120;
+    // Harga sekarang
+    ctx.fillStyle = "#8b949e";
+    ctx.font = "11px Arial";
+    ctx.textAlign = "left";
+    ctx.fillText("HARGA SEKARANG", 24, row1y - 16);
+    ctx.fillStyle = "#e6edf3";
+    ctx.font = "bold 22px Arial";
+    ctx.fillText(currentPrice > 0 ? fmt(currentPrice) : "—", 24, row1y + 8);
 
+    // Target harga wajar
+    ctx.fillStyle = "#8b949e";
+    ctx.font = "11px Arial";
+    ctx.fillText("TARGET HARGA WAJAR", W / 2, row1y - 16);
+    ctx.fillStyle = "#2f81f7";
+    ctx.font = "bold 22px Arial";
+    ctx.fillText(fmt(scenario.averagePrice), W / 2, row1y + 8);
+
+    // Upside
+    if (upside !== null) {
+      const upsideText = (upside >= 0 ? "+" : "") + upside.toFixed(1) + "%";
+      ctx.fillStyle = upside >= 0 ? "#3fb950" : "#f85149";
+      ctx.font = "bold 16px Arial";
+      ctx.textAlign = "right";
+      ctx.fillText(upsideText, W - 24, row1y + 8);
       ctx.fillStyle = "#8b949e";
-      ctx.font = "10px Arial";
-      ctx.textAlign = "left";
-      ctx.fillText(m.label, x + 10, y + 20);
+      ctx.font = "11px Arial";
+      ctx.fillText("POTENSI", W - 24, row1y - 16);
+    }
 
-      ctx.fillStyle = m.color;
-      ctx.font = "bold 15px Arial";
-      ctx.fillText(m.value, x + 10, y + 52);
-    });
+    // Divider 2
+    ctx.strokeStyle = "#30363d";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(24, row1y + 30);
+    ctx.lineTo(W - 24, row1y + 30);
+    ctx.stroke();
 
-    // Breakdown row
-    const bItems = [
-      { label: "Fair Value PER", value: `Rp ${fmt(scenario.fairValuePer)}` },
-      { label: "Fair Value PBV", value: `Rp ${fmt(scenario.fairValuePbv)}` },
-      { label: "DCF Price", value: `Rp ${fmt(scenario.dcfPrice)}` },
+    // Row 2: PER, PBV, DCF
+    const row2y = row1y + 80;
+    const cols = [
+      { label: "FAIR VALUE PER", value: fmt(scenario.fairValuePer) },
+      { label: "FAIR VALUE PBV", value: fmt(scenario.fairValuePbv) },
+      { label: "DCF PRICE", value: fmt(scenario.dcfPrice) },
     ];
-    const bW = (W - 48 - 2 * 12) / 3;
-    bItems.forEach((b, i) => {
-      const x = 24 + i * (bW + 12);
-      const y = 218;
-      ctx.fillStyle = "#161b22";
-      ctx.roundRect(x, y, bW, 60, 8);
-      ctx.fill();
-      ctx.strokeStyle = "#30363d";
-      ctx.lineWidth = 1;
-      ctx.roundRect(x, y, bW, 60, 8);
-      ctx.stroke();
-
+    const colW = (W - 48) / 3;
+    cols.forEach((col, i) => {
+      const x = 24 + i * colW;
       ctx.fillStyle = "#8b949e";
-      ctx.font = "10px Arial";
+      ctx.font = "11px Arial";
       ctx.textAlign = "left";
-      ctx.fillText(b.label, x + 10, y + 18);
-
+      ctx.fillText(col.label, x, row2y - 16);
       ctx.fillStyle = "#79c0ff";
-      ctx.font = "bold 13px Arial";
-      ctx.fillText(b.value, x + 10, y + 42);
+      ctx.font = "bold 16px Arial";
+      ctx.fillText(col.value, x, row2y + 6);
     });
 
-    // MOS
-    if (scenario.marginOfSafety) {
-      ctx.fillStyle = "#1a2535";
-      ctx.roundRect(24, 294, W - 48, 50, 8);
-      ctx.fill();
-      ctx.strokeStyle = "#2f81f7";
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(24, 302);
-      ctx.lineTo(24, 336);
-      ctx.stroke();
+    // PER x PBV assumption
+    ctx.fillStyle = "#8b949e";
+    ctx.font = "11px Arial";
+    ctx.textAlign = "right";
+    ctx.fillText(`PER ${scenario.per.toFixed(0)}× · PBV ${scenario.pbv.toFixed(2)}×`, W - 24, row2y + 6);
 
+    // MOS (jika ada)
+    if (scenario.marginOfSafety) {
+      const mosY = row2y + 40;
+      ctx.fillStyle = "#163356";
+      ctx.fillRect(24, mosY, W - 48, 36);
+      ctx.fillStyle = "#2f81f7";
+      ctx.fillRect(24, mosY, 4, 36);
       ctx.fillStyle = "#8b949e";
       ctx.font = "10px Arial";
       ctx.textAlign = "left";
-      ctx.fillText("Margin of Safety", 36, 312);
-
-      ctx.fillStyle = "#2f81f7";
-      ctx.font = "bold 15px Arial";
-      ctx.fillText(`Rp ${fmt(scenario.marginOfSafety)}`, 36, 332);
+      ctx.fillText("MARGIN OF SAFETY", 36, mosY + 14);
+      ctx.fillStyle = "#e6edf3";
+      ctx.font = "bold 14px Arial";
+      ctx.fillText(fmt(scenario.marginOfSafety), 36, mosY + 30);
     }
 
     // Footer
-    ctx.fillStyle = "#30363d";
-    ctx.fillRect(20, H - 42, W - 40, 1);
     ctx.fillStyle = "#8b949e";
     ctx.font = "10px Arial";
     ctx.textAlign = "center";
-    ctx.fillText("Bukan rekomendasi jual/beli. Selalu lakukan analisis mandiri sebelum berinvestasi.", W / 2, H - 18);
+    ctx.fillText("Bukan rekomendasi investasi. Selalu lakukan analisis mandiri.", W / 2, H - 14);
 
-    const dataUrl = canvas.toDataURL("image/jpeg", 0.92);
+    const dataUrl = canvas.toDataURL("image/jpeg", 0.95);
     const link = document.createElement("a");
     link.download = filename;
     link.href = dataUrl;
