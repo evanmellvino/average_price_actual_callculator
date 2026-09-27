@@ -1233,7 +1233,7 @@ export default function App() {
       )}
       {/* Hidden Export Summary for JPG capture */}
       {activeStock && scenarios[0] && (
-        <div style={{ position: "fixed", left: "-9999px", top: "-9999px", width: "800px" }}>
+        <div style={{ position: "fixed", top: 0, left: 0, width: "800px", opacity: 0, pointerEvents: "none", zIndex: -1 }}>
           <div id="export-summary-container">
             <ExportSummary
               stock={activeStock}
