@@ -7,6 +7,33 @@
 :root {
   font-family: var(--font-sans);
   color-scheme: dark;
+  --page: #0d1117;
+  --page-elevated: #161b22;
+  --card: #161b22;
+  --card-hover: #1c2128;
+  --text: #e6edf3;
+  --text-muted: #8b949e;
+  --text-accent: #2f81f7;
+  --text-blue: #79c0ff;
+  --text-amber: #d29922;
+  --text-red: #f85149;
+  --text-positive: #3fb950;
+  --border: #30363d;
+  --input-bg: #0d1117;
+  --input-text: #ffffff;
+  --input-border: #30363d;
+  --input-focus: #2f81f7;
+  --header-bg: #161b22;
+  --btn-primary: #2f81f7;
+  --btn-primary-hover: #1f6feb;
+  --btn-secondary: #21262d;
+  --btn-secondary-hover: #30363d;
+  --highlight: #161b22;
+  --danger: #2d1717;
+  --info: #161b22;
+  --shadow: rgba(0, 0, 0, 0.28);
+  --chart-grid: #30363d;
+  --chart-cursor: rgba(139, 148, 158, 0.08);
 }
 
 * {
@@ -1611,14 +1638,15 @@ body {
   justify-content: center;
   margin-top: 0.75rem;
   padding-block: 0.75rem;
-  background: var(--btn-primary) !important;
+  background-color: #2f81f7 !important;
   color: #ffffff !important;
-  border: 1px solid var(--btn-primary) !important;
+  border: 1px solid #2f81f7 !important;
+  font-weight: 600 !important;
 }
 
 .auth-submit:hover {
-  background: var(--btn-primary-hover) !important;
-  border-color: var(--btn-primary-hover) !important;
+  background-color: #1f6feb !important;
+  border-color: #1f6feb !important;
 }
 
 .auth-submit:disabled {
