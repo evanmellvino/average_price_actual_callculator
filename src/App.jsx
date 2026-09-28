@@ -676,7 +676,7 @@ export default function App() {
       </nav>
 
       {/* Main */}
-      <main className="container-main">
+      <main className="container-main page-enter" key={activePage}>
         <section className="page-intro">
           <div>
             <p className="page-kicker">{PAGE_META[activePage].kicker}</p>
@@ -915,7 +915,7 @@ export default function App() {
         ) : (
           <div className={`grid-form-results ${activePage === "kalkulator" ? "" : "grid-single-page"}`}>
             {/* LEFT: Input Form — Kalkulator page only */}
-            <div className={activePage === "kalkulator" ? "" : "hidden-page"}>
+            <div className={`page-enter ${activePage === "kalkulator" ? "" : "hidden-page"}`}>
               {/* Step 1: Laba */}
         <section className="card">
                   <h2 className="section-title">
@@ -1150,7 +1150,7 @@ export default function App() {
             </div>
 
             {/* RIGHT: Results — split by page */}
-            <div id="results-container">
+            <div id="results-container" className="page-enter">
               {scenarios.length === 0 ? (
                 <div className="card p-8 text-center">
                   <Calculator size={48} className="mx-auto mb-4 opacity-30" />
