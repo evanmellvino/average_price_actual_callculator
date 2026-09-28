@@ -282,3 +282,65 @@ export function validateForm(form, unit, pbvChoice, customPbv) {
 
   return { errors, hasProfitInput: hasPositiveProfit, canCalculate };
 }
+
+// Skor valuasi 0-100 dari gabungan faktor yang sudah dihitung.
+// Bukan rekomendasi — hanya ringkasan kuantitatif untuk mempercepat keputusan.
+export function calculateValuationScore(scenario, currentPrice) {
+  if (!scenario) return null;
+
+  const factors = [];
+  let total = 0;
+  let weight = 0;
+
+  // 1. Upside vs harga wajar (bobot 40)
+  if (currentPrice > 0 && scenario.averagePrice > 0) {
+    const upside = ((scenario.averagePrice - currentPrice) / currentPrice) * 100;
+    // -30% => 0 poin, +30% => 40 poin (skala linier, clamp)
+    const pts = Math.max(0, Math.min(40, ((upside + 30) / 60) * 40));
+    factors.push({ key: "upside", label: "Potensi vs harga wajar", value: upside, points: pts, max: 40 });
+    total += pts;
+    weight += 40;
+  }
+
+  // 2. Buffer ke DCF (bobot 25)
+  if (currentPrice > 0 && scenario.dcfPrice > 0) {
+    const buffer = ((scenario.dcfPrice - currentPrice) / currentPrice) * 100;
+    const pts = Math.max(0, Math.min(25, ((buffer + 30) / 60) * 25));
+    factors.push({ key: "dcf", label: "Buffer ke nilai DCF", value: buffer, points: pts, max: 25 });
+    total += pts;
+    weight += 25;
+  }
+
+  // 3. Margin of Safety tercapai (bobot 20)
+  if (scenario.marginOfSafety !== null && currentPrice > 0) {
+    const reached = currentPrice <= scenario.marginOfSafety;
+    const pts = reached ? 20 : Math.max(0, 20 * (1 - Math.min(1, (currentPrice - scenario.marginOfSafety) / Math.max(1, scenario.averagePrice - scenario.marginOfSafety))));
+    factors.push({ key: "mos", label: "Harga di bawah target MOS", value: reached, points: pts, max: 20 });
+    total += pts;
+    weight += 20;
+  }
+
+  // 4. PER aktual wajar (bobot 15): semakin rendah semakin baik, acuan < 15
+  if (scenario.actualPer !== null && scenario.actualPer > 0) {
+    const per = scenario.actualPer;
+    const pts = per <= 8 ? 15 : per <= 12 ? 12 : per <= 15 ? 9 : per <= 20 ? 5 : 0;
+    factors.push({ key: "per", label: "PER aktual relatif murah", value: per, points: pts, max: 15 });
+    total += pts;
+    weight += 15;
+  }
+
+  const score = weight > 0 ? Math.round((total / weight) * 100) : null;
+  if (score === null) return null;
+
+  const band =
+    score >= 75 ? "Sangat menarik" :
+    score >= 60 ? "Menarik" :
+    score >= 40 ? "Cukup wajar" :
+    score >= 25 ? "Mahal" : "Sangat mahal";
+
+  const tone =
+    score >= 60 ? "positive" :
+    score >= 40 ? "balanced" : "negative";
+
+  return { score, band, tone, factors };
+}

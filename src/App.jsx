@@ -9,6 +9,8 @@ import { PerPbvSelector } from "./components/PerPbvSelector.jsx";
 import { ResultCard } from "./components/ResultCard.jsx";
 import { ComparisonChart } from "./components/ComparisonChart.jsx";
 import { HistoryPanel } from "./components/HistoryPanel.jsx";
+import { ValuationScore } from "./components/ValuationScore.jsx";
+import { StockComparisonTable } from "./components/StockComparisonTable.jsx";
 import { AuthScreen } from "./components/AuthScreen.jsx";
 import { ExportSummary } from "./components/ExportSummary.jsx";
 import { hasSupabaseConfig, supabase } from "./lib/supabase.js";
@@ -1086,6 +1088,8 @@ export default function App() {
                     </div>
                   </section>
 
+                  <ValuationScore scenario={summaryScenario} currentPrice={currentPrice} />
+
                   {marketComparison && (
                     <section className="market-comparison card">
                       <div className="market-comparison-heading">
@@ -1164,6 +1168,8 @@ export default function App() {
 
                   {/* Chart */}
                   <ComparisonChart scenarios={scenarios} currentPrice={currentPrice} />
+
+                  <StockComparisonTable stocks={namedStocks} onOpen={openStockCalculation} />
 
                   <div className="card result-actions">
                     <button type="button" className="action-btn flex-1" onClick={saveActiveHistory} disabled={!canCalculate || !scenarios.length}>
