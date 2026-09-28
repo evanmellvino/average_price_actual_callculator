@@ -531,7 +531,7 @@ export default function App() {
     return (
       <main className="auth-page">
         <section className="auth-card">
-          <div className="auth-brand-icon"><Calculator size={25} /></div>
+          <div className="auth-brand-icon"><img src="/logo-kalkulator.svg" alt="Logo" width="48" height="48" /></div>
           <p className="summary-eyebrow">KONFIGURASI DIPERLUKAN</p>
           <h1>Hubungkan Supabase</h1>
           <p className="auth-description">Buat file <code>.env.local</code> di <code>C:\calculator\app</code> dan isi URL serta anon/publishable key project Anda. Setelah itu jalankan file <code>supabase/schema.sql</code> di SQL Editor Supabase, lalu restart server.</p>
@@ -546,7 +546,7 @@ export default function App() {
     return (
       <main className="auth-page">
         <section className="auth-card">
-          <div className="auth-brand-icon"><Calculator size={25} /></div>
+          <div className="auth-brand-icon"><img src="/logo-kalkulator.svg" alt="Logo" width="48" height="48" /></div>
           <h1>Buat password baru</h1>
           <p className="auth-description">Masukkan password baru untuk akun Anda.</p>
           <form className="auth-form" onSubmit={handlePasswordUpdate}>
@@ -583,7 +583,7 @@ export default function App() {
         <div className="header-inner">
           <div className="brand">
             <div className="brand-icon">
-              <Calculator size={20} />
+              <img src="/logo-kalkulator.svg" alt="Average Price Calculator" width="40" height="40" />
             </div>
             <div>
               <h1 className="brand-title">Average Price Calculator</h1>

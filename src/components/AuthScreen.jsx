@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Calculator, Eye, EyeOff, LoaderCircle, LogIn, UserPlus } from "lucide-react";
+import { Eye, EyeOff, LoaderCircle, LogIn, UserPlus } from "lucide-react";
 
 export function AuthScreen({ supabase, notice, onDismissNotice }) {
   const [mode, setMode] = useState("login");
@@ -40,7 +40,7 @@ export function AuthScreen({ supabase, notice, onDismissNotice }) {
   return (
     <main className="auth-page">
       <section className="auth-card">
-        <div className="auth-brand-icon"><Calculator size={25} /></div>
+        <div className="auth-brand-icon"><img src="/logo-kalkulator.svg" alt="Logo" width="48" height="48" /></div>
         <p className="auth-brand-name">AVERAGE PRICE CALCULATOR</p>
         <h1>{mode === "login" ? "Selamat datang kembali" : mode === "signup" ? "Buat akun pribadi" : "Reset password"}</h1>
         <p className="auth-description">{mode === "reset" ? "Masukkan email akun. Kami akan mengirim tautan untuk membuat password baru." : "Masuk untuk menggunakan kalkulator dan menyimpan saham serta riwayat analisis di akun Anda."}</p>

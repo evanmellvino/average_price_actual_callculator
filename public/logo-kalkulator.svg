@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FF8A3D"/>
+      <stop offset="1" stop-color="#E4470F"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <!-- badan kalkulator -->
+  <rect x="140" y="104" width="232" height="304" rx="36" fill="#FFF7F0"/>
+  <!-- layar -->
+  <rect x="168" y="132" width="176" height="64" rx="16" fill="#C93A0A"/>
+  <rect x="290" y="150" width="30" height="8" rx="4" fill="#FFB98A"/>
+  <rect x="262" y="168" width="58" height="10" rx="5" fill="#FFF7F0"/>
+  <!-- tombol -->
+  <g fill="#F26A1B">
+    <rect x="168" y="222" width="46" height="46" rx="14"/>
+    <rect x="233" y="222" width="46" height="46" rx="14"/>
+    <rect x="298" y="222" width="46" height="46" rx="14"/>
+    <rect x="168" y="287" width="46" height="46" rx="14"/>
+    <rect x="233" y="287" width="46" height="46" rx="14"/>
+    <rect x="298" y="287" width="46" height="46" rx="14"/>
+    <rect x="168" y="352" width="46" height="34" rx="12"/>
+    <rect x="233" y="352" width="46" height="34" rx="12"/>
+  </g>
+  <!-- tombol sama dengan -->
+  <rect x="298" y="352" width="46" height="34" rx="12" fill="#C93A0A"/>
+</svg>
