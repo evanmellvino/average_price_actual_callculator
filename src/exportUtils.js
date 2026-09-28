@@ -16,16 +16,16 @@ export async function exportSummaryAsJPG(stockData, filename = "stock-summary.jp
     const date = new Date().toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
 
     // BG
-    ctx.fillStyle = "#0d1117";
+    ctx.fillStyle = "#0b0b0b";
     ctx.fillRect(0, 0, W, H);
 
-    // Top accent bar
-    ctx.fillStyle = "#2f81f7";
+    // Top accent bar (Fey Ember)
+    ctx.fillStyle = "#ffa16c";
     ctx.fillRect(0, 0, W, 5);
 
     // App label
-    ctx.fillStyle = "#8b949e";
-    ctx.font = "11px Arial";
+    ctx.fillStyle = "#9aa4ad";
+    ctx.font = "11px Inter, Arial";
     ctx.textAlign = "left";
     ctx.fillText("AVERAGE PRICE CALCULATOR", 24, 28);
 
@@ -34,13 +34,13 @@ export async function exportSummaryAsJPG(stockData, filename = "stock-summary.jp
     ctx.fillText(date, W - 24, 28);
 
     // Stock name
-    ctx.fillStyle = "#e6edf3";
-    ctx.font = "bold 34px Arial";
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 34px Inter, Arial";
     ctx.textAlign = "left";
     ctx.fillText(stock.name, 24, 72);
 
     // Divider
-    ctx.strokeStyle = "#30363d";
+    ctx.strokeStyle = "#2a2a2a";
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(24, 84);
@@ -50,36 +50,36 @@ export async function exportSummaryAsJPG(stockData, filename = "stock-summary.jp
     // Row 1: Harga sekarang + Target
     const row1y = 120;
     // Harga sekarang
-    ctx.fillStyle = "#8b949e";
-    ctx.font = "11px Arial";
+    ctx.fillStyle = "#9aa4ad";
+    ctx.font = "11px Inter, Arial";
     ctx.textAlign = "left";
     ctx.fillText("HARGA SEKARANG", 24, row1y - 16);
-    ctx.fillStyle = "#e6edf3";
-    ctx.font = "bold 22px Arial";
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 22px Inter, Arial";
     ctx.fillText(currentPrice > 0 ? fmt(currentPrice) : "—", 24, row1y + 8);
 
     // Target harga wajar
-    ctx.fillStyle = "#8b949e";
-    ctx.font = "11px Arial";
+    ctx.fillStyle = "#9aa4ad";
+    ctx.font = "11px Inter, Arial";
     ctx.fillText("TARGET HARGA WAJAR", W / 2, row1y - 16);
-    ctx.fillStyle = "#2f81f7";
-    ctx.font = "bold 22px Arial";
+    ctx.fillStyle = "#ffa16c";
+    ctx.font = "bold 22px Inter, Arial";
     ctx.fillText(fmt(scenario.averagePrice), W / 2, row1y + 8);
 
     // Upside
     if (upside !== null) {
       const upsideText = (upside >= 0 ? "+" : "") + upside.toFixed(1) + "%";
-      ctx.fillStyle = upside >= 0 ? "#3fb950" : "#f85149";
-      ctx.font = "bold 16px Arial";
+      ctx.fillStyle = upside >= 0 ? "#4ebe96" : "#f04848";
+      ctx.font = "bold 16px Inter, Arial";
       ctx.textAlign = "right";
       ctx.fillText(upsideText, W - 24, row1y + 8);
-      ctx.fillStyle = "#8b949e";
-      ctx.font = "11px Arial";
+      ctx.fillStyle = "#9aa4ad";
+      ctx.font = "11px Inter, Arial";
       ctx.fillText("POTENSI", W - 24, row1y - 16);
     }
 
     // Divider 2
-    ctx.strokeStyle = "#30363d";
+    ctx.strokeStyle = "#2a2a2a";
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(24, row1y + 30);
@@ -96,40 +96,40 @@ export async function exportSummaryAsJPG(stockData, filename = "stock-summary.jp
     const colW = (W - 48) / 3;
     cols.forEach((col, i) => {
       const x = 24 + i * colW;
-      ctx.fillStyle = "#8b949e";
-      ctx.font = "11px Arial";
+      ctx.fillStyle = "#9aa4ad";
+      ctx.font = "11px Inter, Arial";
       ctx.textAlign = "left";
       ctx.fillText(col.label, x, row2y - 16);
-      ctx.fillStyle = "#79c0ff";
-      ctx.font = "bold 16px Arial";
+      ctx.fillStyle = "#ffbe98";
+      ctx.font = "bold 16px Inter, Arial";
       ctx.fillText(col.value, x, row2y + 6);
     });
 
     // PER x PBV assumption
-    ctx.fillStyle = "#8b949e";
-    ctx.font = "11px Arial";
+    ctx.fillStyle = "#9aa4ad";
+    ctx.font = "11px Inter, Arial";
     ctx.textAlign = "right";
     ctx.fillText(`PER ${scenario.per.toFixed(0)}× · PBV ${scenario.pbv.toFixed(2)}×`, W - 24, row2y + 6);
 
     // MOS (jika ada)
     if (scenario.marginOfSafety) {
       const mosY = row2y + 40;
-      ctx.fillStyle = "#163356";
+      ctx.fillStyle = "#2b1a10";
       ctx.fillRect(24, mosY, W - 48, 36);
-      ctx.fillStyle = "#2f81f7";
+      ctx.fillStyle = "#ffa16c";
       ctx.fillRect(24, mosY, 4, 36);
-      ctx.fillStyle = "#8b949e";
-      ctx.font = "10px Arial";
+      ctx.fillStyle = "#9aa4ad";
+      ctx.font = "10px Inter, Arial";
       ctx.textAlign = "left";
       ctx.fillText("MARGIN OF SAFETY", 36, mosY + 14);
-      ctx.fillStyle = "#e6edf3";
-      ctx.font = "bold 14px Arial";
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 14px Inter, Arial";
       ctx.fillText(fmt(scenario.marginOfSafety), 36, mosY + 30);
     }
 
     // Footer
-    ctx.fillStyle = "#8b949e";
-    ctx.font = "10px Arial";
+    ctx.fillStyle = "#9aa4ad";
+    ctx.font = "10px Inter, Arial";
     ctx.textAlign = "center";
     ctx.fillText("Bukan rekomendasi investasi. Selalu lakukan analisis mandiri.", W / 2, H - 14);
 

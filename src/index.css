@@ -17,8 +17,8 @@
   --card-hover: #1f1f1f;
   --text: #ffffff;
   --text-muted: #868f97;
-  --text-accent: #479ffa;
-  --text-blue: #479ffa;
+  --text-accent: #ffa16c;
+  --text-blue: #ffa16c;
   --text-amber: #ffa16c;
   --text-red: #f04848;
   --text-positive: #4ebe96;
@@ -27,7 +27,7 @@
   --input-bg: #131313;
   --input-text: #ffffff;
   --input-border: #525252;
-  --input-focus: #479ffa;
+  --input-focus: #ffa16c;
   --header-bg: #0b0b0b;
   --btn-primary: transparent;
   --btn-primary-hover: rgba(255,255,255,0.06);
@@ -68,8 +68,8 @@ body {
   --card-hover: #1f1f1f;
   --text: #ffffff;
   --text-muted: #868f97;
-  --text-accent: #479ffa;
-  --text-blue: #479ffa;
+  --text-accent: #ffa16c;
+  --text-blue: #ffa16c;
   --text-amber: #ffa16c;
   --text-red: #f04848;
   --text-positive: #4ebe96;
@@ -78,7 +78,7 @@ body {
   --input-bg: #131313;
   --input-text: #ffffff;
   --input-border: #525252;
-  --input-focus: #479ffa;
+  --input-focus: #ffa16c;
   --header-bg: #0b0b0b;
   --btn-primary: transparent;
   --btn-primary-hover: rgba(255,255,255,0.06);
@@ -99,9 +99,9 @@ body {
   --card-hover: #f9f9f9;
   --text: #0b0b0b;
   --text-muted: #525252;
-  --text-accent: #2563eb;
-  --text-blue: #2563eb;
-  --text-amber: #d97706;
+  --text-accent: #d9662b;
+  --text-blue: #d9662b;
+  --text-amber: #d9662b;
   --text-red: #dc2626;
   --text-positive: #16a34a;
   --border: #d1d5db;
@@ -109,7 +109,7 @@ body {
   --input-bg: #ffffff;
   --input-text: #0b0b0b;
   --input-border: #d1d5db;
-  --input-focus: #2563eb;
+  --input-focus: #d9662b;
   --header-bg: #ffffff;
   --btn-primary: transparent;
   --btn-primary-hover: rgba(0,0,0,0.04);
@@ -167,8 +167,9 @@ body {
 }
 
 .brand-icon {
-  @apply w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-lg;
-  background: var(--btn-primary);
+  @apply w-10 h-10 rounded-xl flex items-center justify-center shadow-lg;
+  background: var(--text-accent);
+  color: #1a0f08;
   box-shadow: 0 4px 14px var(--shadow);
 }
 
@@ -1603,13 +1604,13 @@ body {
   margin-bottom: 1.4rem;
   place-items: center;
   border-radius: 99px;
-  background: var(--text-accent, #479ffa);
-  color: #ffffff;
+  background: var(--text-accent, #ffa16c);
+  color: #1a0f08;
 }
 
 .auth-brand-name {
   margin: 0 0 0.55rem;
-  color: var(--text-accent, #479ffa);
+  color: var(--text-accent, #ffa16c);
   font-size: 0.68rem;
   font-weight: 800;
   letter-spacing: 0.12em;
@@ -1667,16 +1668,16 @@ body {
   justify-content: center;
   margin-top: 0.75rem;
   padding-block: 0.75rem;
-  background-color: #479ffa !important;
-  color: #ffffff !important;
-  border: 1px solid #479ffa !important;
+  background-color: #ffa16c !important;
+  color: #1a0f08 !important;
+  border: 1px solid #ffa16c !important;
   font-weight: 500 !important;
 }
 
 .auth-submit:hover {
-  background-color: #2e8bee !important;
-  border-color: #2e8bee !important;
-  box-shadow: rgba(71, 159, 250, 0.35) 0px 0px 18px;
+  background-color: #ff8a4d !important;
+  border-color: #ff8a4d !important;
+  box-shadow: rgba(255, 161, 108, 0.35) 0px 0px 18px;
 }
 
 .auth-submit:disabled {
@@ -1710,7 +1711,7 @@ body {
 .auth-switch button {
   border: 0;
   background: transparent;
-  color: var(--text-accent, #479ffa);
+  color: var(--text-accent, #ffa16c);
   font: inherit;
   font-weight: 700;
   cursor: pointer;
@@ -2379,8 +2380,8 @@ body {
 }
 
 .export-summary-metric-highlight {
-  background: color-mix(in srgb, var(--btn-primary) 10%, var(--page-elevated));
-  border: 1px solid var(--btn-primary);
+  background: color-mix(in srgb, var(--text-accent) 12%, var(--page-elevated));
+  border: 1px solid var(--text-accent);
 }
 
 .export-summary-label {
@@ -2401,7 +2402,7 @@ body {
 }
 
 .export-summary-value-primary {
-  color: var(--btn-primary);
+  color: var(--text-accent);
   font-size: 1.5rem;
 }
 
@@ -2562,15 +2563,15 @@ body {
 /* Keep auth-submit luminous like the Fey primary button */
 .auth-submit {
   border-radius: 99px !important;
-  background: #479ffa !important;
-  color: #ffffff !important;
-  border: 1px solid #479ffa !important;
-  font-weight: 500;
+  background: #ffa16c !important;
+  color: #1a0f08 !important;
+  border: 1px solid #ffa16c !important;
+  font-weight: 600;
 }
 .auth-submit:hover {
-  background: #2e8bee !important;
-  border-color: #2e8bee !important;
-  box-shadow: rgba(71, 159, 250, 0.35) 0px 0px 18px;
+  background: #ff8a4d !important;
+  border-color: #ff8a4d !important;
+  box-shadow: rgba(255, 161, 108, 0.35) 0px 0px 18px;
 }
 
 /* --- 16px content cards + deep black halo --- */
