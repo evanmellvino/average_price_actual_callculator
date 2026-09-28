@@ -820,7 +820,7 @@ body {
 
 .valuation-summary,
 .market-comparison {
-  margin-bottom: 1rem;
+  margin-bottom: 0;
 }
 
 .valuation-summary {
@@ -3497,6 +3497,21 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+/* Results page spacing — keep cards from touching */
+#results-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  min-width: 0;
+}
+#results-container > * {
+  min-width: 0;
+}
+/* Also space the input form column on the Kalkulator page */
+.grid-form-results > div:first-child {
+  gap: 1.25rem;
 }
 
 @media (max-width: 640px) {
