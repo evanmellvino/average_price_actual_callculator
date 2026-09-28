@@ -617,7 +617,7 @@ export default function App() {
         <section className="page-intro">
           <div>
             <p className="page-kicker">WORKSPACE INVESTASI</p>
-            <h2>Temukan harga wajar, <span>lebih terukur.</span></h2>
+            <h2>Temukan harga wajar, <span className="fey-gradient">lebih terukur.</span></h2>
             <p>Hitung estimasi nilai saham dengan pendekatan PER dan PBV.</p>
           </div>
           <button type="button" className="action-btn-secondary signout-btn" onClick={handleSignOut}>Keluar akun</button>

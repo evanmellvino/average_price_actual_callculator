@@ -1,12 +1,15 @@
 @import "tailwindcss";
+@import "@fontsource-variable/inter";
 
 @theme {
-  --font-sans: 'Calibre', 'Inter', 'Satoshi', 'General Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-sans: 'Calibre', 'Inter Variable', 'Inter', 'Satoshi', 'General Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 :root {
   font-family: var(--font-sans);
   color-scheme: dark;
+  font-optical-sizing: auto;
+  font-feature-settings: "ss01" on, "tnum" on, "cv11" on;
   /* Fey color tokens */
   --page: #0b0b0b;
   --page-elevated: #131313;
@@ -2536,8 +2539,7 @@ body {
 .watchlist-symbol-button,
 .scenario-chip,
 .stock-tab,
-.account-email,
-.brand-icon {
+.account-email {
   border-radius: 99px !important;
 }
 
@@ -2777,4 +2779,107 @@ body {
 .secondary-btn:hover {
   background: var(--card-hover);
   border-color: var(--text-muted);
+}
+
+/* ============================================================
+   FEY TYPE SCALE + GRADIENTS + LAYOUT (tahap 2)
+   ============================================================ */
+
+/* --- Display numbers: 48px, weight 700, tracking -0.08em --- */
+.average-price-amount {
+  font-size: clamp(2.25rem, 5vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.08em;
+  line-height: 1.05;
+  font-feature-settings: "tnum" on, "ss01" on;
+}
+
+/* Mid-range headings: -0.053em (24-26px) */
+.page-intro h2 {
+  letter-spacing: -0.053em;
+  font-weight: 700;
+}
+.results-title,
+.summary-title,
+.chart-title,
+.workspace-tools-title {
+  letter-spacing: -0.053em;
+}
+
+/* Big metric values: -0.08em */
+.fv-value,
+.summary-metric strong,
+.summary-fair-value strong,
+.market-price-labels strong,
+.metric-value,
+.avg-value {
+  letter-spacing: -0.06em;
+  font-feature-settings: "tnum" on;
+}
+
+/* --- Fey gradient accent (ember → signal) on key headline words --- */
+.fey-gradient {
+  background: linear-gradient(97.13deg, #ffa16c 8.47%, #b64a2a 108.41%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* --- Pill nav: transparent, active = Signal underline (no fill) --- */
+.unit-switch {
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  padding: 3px;
+}
+.unit-btn {
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: 99px;
+}
+.unit-btn.active {
+  background: transparent !important;
+  color: var(--text) !important;
+  box-shadow: inset 0 -2px 0 0 var(--text-accent);
+}
+
+.stock-tab {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+}
+.stock-tab.active {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: inset 0 -2px 0 0 var(--text-accent);
+  color: var(--text);
+}
+
+/* --- Layout: Fey page max-width 1200px + generous vertical rhythm --- */
+.container-main {
+  max-width: 1200px;
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+  gap: 1.75rem;
+}
+
+/* Section gap toward 64px on wide screens */
+@media (min-width: 1024px) {
+  .container-main {
+    gap: 2rem;
+  }
+}
+
+/* --- Icon radius 6px, small radius 10px (Fey shapes) --- */
+.brand-icon,
+.header-btn,
+.auth-brand-icon {
+  border-radius: 6px !important;
+}
+.card-compact,
+.fv-card,
+.metric-item,
+.per-saham-item,
+.watchlist-item {
+  border-radius: 10px;
 }
