@@ -56,9 +56,22 @@ body {
 /* === Theme variables === */
 .app-shell {
   min-height: 100vh;
-  background: var(--page);
   color: var(--text);
   transition: background 0.3s ease, color 0.3s ease;
+  background:
+    radial-gradient(1200px 600px at 15% -5%, rgba(255, 138, 61, 0.10), transparent 55%),
+    radial-gradient(900px 500px at 100% 0%, rgba(255, 161, 108, 0.06), transparent 50%),
+    radial-gradient(800px 800px at 50% 120%, rgba(78, 190, 150, 0.04), transparent 60%),
+    var(--page);
+  background-attachment: fixed;
+}
+
+.app-shell.theme-light {
+  background:
+    radial-gradient(1200px 600px at 15% -5%, rgba(217, 102, 43, 0.08), transparent 55%),
+    radial-gradient(900px 500px at 100% 0%, rgba(217, 102, 43, 0.05), transparent 50%),
+    var(--page);
+  background-attachment: fixed;
 }
 
 .app-shell.theme-dark {
@@ -1588,8 +1601,12 @@ body {
   min-height: 100vh;
   place-items: center;
   padding: 1.25rem;
-  background: var(--page, #0b0b0b);
   color: var(--text, #ffffff);
+  background:
+    radial-gradient(1000px 600px at 50% -10%, rgba(255, 138, 61, 0.14), transparent 55%),
+    radial-gradient(700px 500px at 90% 110%, rgba(255, 161, 108, 0.06), transparent 55%),
+    var(--page, #0b0b0b);
+  background-attachment: fixed;
 }
 
 .auth-card {
