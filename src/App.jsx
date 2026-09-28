@@ -18,6 +18,39 @@ import { ExportSummary } from "./components/ExportSummary.jsx";
 import { hasSupabaseConfig, supabase } from "./lib/supabase.js";
 import "./index.css";
 
+const PAGE_META = {
+  kalkulator: {
+    kicker: "LANGKAH 1 · INPUT",
+    title: <>Masukkan data, <span className="fey-gradient">lalu hitung.</span></>,
+    desc: "Isi data fundamental, saham, dan margin of safety. Tekan Hitung valuasi untuk melihat hasil.",
+  },
+  hasil: {
+    kicker: "LANGKAH 2 · HASIL",
+    title: <>Ringkasan valuasi <span className="fey-gradient">dan skor.</span></>,
+    desc: "Harga wajar rata-rata, skor valuasi, dan rincian skenario PER/PBV.",
+  },
+  analisis: {
+    kicker: "LANGKAH 3 · ANALISIS",
+    title: <>Uji asumsi, <span className="fey-gradient">banding &amp; proyeksi.</span></>,
+    desc: "Dividen, harga pasar vs wajar, Scenario Lab, chart, dan tabel banding saham.",
+  },
+  portofolio: {
+    kicker: "PORTOFOLIO",
+    title: <>Lacak posisi <span className="fey-gradient">dan laba/rugi.</span></>,
+    desc: "Modal, nilai sekarang, P/L, dan alokasi tiap saham yang Anda miliki.",
+  },
+  watchlist: {
+    kicker: "RISET PERSONAL",
+    title: <>Saham <span className="fey-gradient">pantauan.</span></>,
+    desc: "Daftar saham yang Anda pantau beserta ringkasan perbandingannya.",
+  },
+  riwayat: {
+    kicker: "CATATAN KALKULASI",
+    title: <>Riwayat <span className="fey-gradient">tersimpan.</span></>,
+    desc: "Snapshot perhitungan yang pernah disimpan, tersinkron ke akun Anda.",
+  },
+};
+
 export default function App() {
   const [session, setSession] = useState(null);
   const [passwordRecovery, setPasswordRecovery] = useState(false);
@@ -51,6 +84,7 @@ export default function App() {
   const namedStocks = stocks.filter((stock) => stock.name.trim());
 
   // Local state
+  const [activePage, setActivePage] = useState("kalkulator");
   const [shareMessage, setShareMessage] = useState("");
   const [shareLink, setShareLink] = useState("");
   const [sectorByStock, setSectorByStock] = useState({});
@@ -616,13 +650,38 @@ export default function App() {
         </div>
       </header>
 
+      {/* Page Navigation */}
+      <nav className="page-nav" aria-label="Navigasi halaman">
+        <div className="page-nav-inner">
+          {[
+            { id: "kalkulator", label: "Kalkulator", icon: Calculator },
+            { id: "hasil", label: "Hasil", icon: TrendingUp },
+            { id: "analisis", label: "Analisis", icon: FlaskConical },
+            { id: "portofolio", label: "Portofolio", icon: Briefcase },
+            { id: "watchlist", label: "Watchlist", icon: Star },
+            { id: "riwayat", label: "Riwayat", icon: History },
+          ].map(({ id, label, icon: Icon }) => (
+            <button
+              key={id}
+              type="button"
+              className={`page-nav-item ${activePage === id ? "active" : ""}`}
+              onClick={() => setActivePage(id)}
+              aria-current={activePage === id ? "page" : undefined}
+            >
+              <Icon size={15} />
+              <span>{label}</span>
+            </button>
+          ))}
+        </div>
+      </nav>
+
       {/* Main */}
       <main className="container-main">
         <section className="page-intro">
           <div>
-            <p className="page-kicker">WORKSPACE INVESTASI</p>
-            <h2>Temukan harga wajar, <span className="fey-gradient">lebih terukur.</span></h2>
-            <p>Hitung estimasi nilai saham dengan pendekatan PER dan PBV.</p>
+            <p className="page-kicker">{PAGE_META[activePage].kicker}</p>
+            <h2>{PAGE_META[activePage].title}</h2>
+            <p>{PAGE_META[activePage].desc}</p>
           </div>
           <button type="button" className="action-btn-secondary signout-btn" onClick={handleSignOut}>Keluar akun</button>
         </section>
@@ -658,21 +717,10 @@ export default function App() {
               <Plus size={16} />
               <span>Tambah saham</span>
             </button>
-            <button type="button" onClick={() => setHistoryOpen((open) => !open)} className="action-btn-secondary" aria-expanded={historyOpen} aria-controls="calculation-history-panel">
-              <History size={16} />
-              <span>{historyOpen ? "Sembunyikan" : "Tampilkan"} riwayat ({history.length})</span>
-            </button>
           </div>
         </div>
-        {historyOpen && <div id="calculation-history-panel"><HistoryPanel history={history} onOpen={openHistoryCalculation} onDelete={async (id) => {
-          const { error } = await supabase.from("calculation_history").delete().eq("id", id).eq("user_id", session.user.id);
-          if (error) {
-            setHistoryNotice(`Gagal menghapus riwayat: ${error.message}`);
-            return;
-          }
-          removeHistorySnapshot(id);
-        }} /></div>}
 
+        {activePage === "watchlist" && (
         <section className="workspace-tools card" aria-labelledby="workspace-tools-title">
           <div className="workspace-tools-heading">
             <div>
@@ -777,6 +825,32 @@ export default function App() {
             ))}
           </div>
         </section>
+        )}
+
+        {activePage === "riwayat" && (
+          <section className="card riwayat-page" aria-labelledby="riwayat-title">
+            <div className="workspace-tools-heading">
+              <div>
+                <p className="summary-eyebrow">CATATAN KALKULASI</p>
+                <h2 id="riwayat-title" className="workspace-tools-title"><History size={18} /> Riwayat perhitungan</h2>
+              </div>
+              <span className="comparison-count">{history.length} tersimpan</span>
+            </div>
+            {history.length === 0 ? (
+              <p className="section-subtitle">Belum ada riwayat. Hitung valuasi lalu tekan "Simpan riwayat" pada halaman Hasil.</p>
+            ) : (
+              <HistoryPanel history={history} onOpen={openHistoryCalculation} onDelete={async (id) => {
+                const { error } = await supabase.from("calculation_history").delete().eq("id", id).eq("user_id", session.user.id);
+                if (error) {
+                  setHistoryNotice(`Gagal menghapus riwayat: ${error.message}`);
+                  return;
+                }
+                removeHistorySnapshot(id);
+              }} />
+            )}
+            {historyNotice && <p className="history-notice" role="status">{historyNotice}</p>}
+          </section>
+        )}
 
         {watchlistReasonOpen && activeStock && (
           <div className="modal-overlay" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && setWatchlistReasonOpen(false)}>
@@ -804,7 +878,7 @@ export default function App() {
           </div>
         )}
 
-        {activeStock && (
+        {activePage === "kalkulator" && activeStock && (
           <section className="card issuer-name-card">
             <h2 className="section-title"><FileText size={18} /> Nama emiten</h2>
             <label className="field-wrap">
@@ -825,7 +899,7 @@ export default function App() {
           </section>
         )}
 
-        {!activeStock ? (
+        {["kalkulator", "hasil", "analisis", "portofolio"].includes(activePage) && (!activeStock ? (
           <div className="card p-8 text-center">
             <Calculator size={48} className="mx-auto mb-4 opacity-30" />
             <p className="text-muted">Tambahkan stock baru untuk mulai kalkulasi.</p>
@@ -839,9 +913,9 @@ export default function App() {
             </button>
           </div>
         ) : (
-          <div className="grid-form-results">
-            {/* LEFT: Input Form */}
-            <div>
+          <div className={`grid-form-results ${activePage === "kalkulator" ? "" : "grid-single-page"}`}>
+            {/* LEFT: Input Form — Kalkulator page only */}
+            <div className={activePage === "kalkulator" ? "" : "hidden-page"}>
               {/* Step 1: Laba */}
         <section className="card">
                   <h2 className="section-title">
@@ -1075,7 +1149,7 @@ export default function App() {
               )}
             </div>
 
-            {/* RIGHT: Results */}
+            {/* RIGHT: Results — split by page */}
             <div id="results-container">
               {scenarios.length === 0 ? (
                 <div className="card p-8 text-center">
@@ -1097,6 +1171,8 @@ export default function App() {
                 </div>
               ) : (
                 <>
+                  {activePage === "hasil" && (
+                  <>
                   <section className="valuation-summary card">
                     <div className="valuation-summary-heading">
                       <div>
@@ -1127,23 +1203,28 @@ export default function App() {
 
                   <ValuationScore scenario={summaryScenario} currentPrice={currentPrice} />
 
-                  <DividendCalculator
-                    scenario={summaryScenario}
-                    name={activeStock.name}
-                    holding={activeStock.holding}
-                  />
+                  {scenarios.map((s) => (
+                    <ResultCard key={s.key} scenario={s} />
+                  ))}
+                  </>
+                  )}
 
-                  {marketComparison && (
-                    <section className="market-comparison card">
-                      <div className="market-comparison-heading">
-                        <div>
-                          <p className="summary-eyebrow">HARGA PASAR VS NILAI WAJAR</p>
-                          <h3>{marketComparison.status}</h3>
-                        </div>
-                        <span className={`market-status-pill ${marketComparison.upsidePercent >= 0 ? "summary-positive" : "summary-negative"}`}>
-                          {marketComparison.upsidePercent >= 0 ? "Potensi naik" : "Potensi turun"} {Math.abs(marketComparison.upsidePercent).toFixed(2)}%
-                        </span>
+                  {activePage === "analisis" && (
+                  <>
+                  <section className="market-comparison card">
+                    <div className="market-comparison-heading">
+                      <div>
+                        <p className="summary-eyebrow">HARGA PASAR VS NILAI WAJAR</p>
+                        <h3>{marketComparison ? marketComparison.status : "Harga pasar belum diisi"}</h3>
                       </div>
+                      {marketComparison && (
+                      <span className={`market-status-pill ${marketComparison.upsidePercent >= 0 ? "summary-positive" : "summary-negative"}`}>
+                        {marketComparison.upsidePercent >= 0 ? "Potensi naik" : "Potensi turun"} {Math.abs(marketComparison.upsidePercent).toFixed(2)}%
+                      </span>
+                      )}
+                    </div>
+                    {marketComparison ? (
+                      <>
                       <div className="market-price-track" aria-label="Perbandingan harga pasar dan harga wajar">
                         <div className="market-price-fill" style={{ width: `${Math.max(4, Math.min(100, currentPrice / Math.max(currentPrice, summaryScenario.averagePrice) * 100))}%` }} />
                         <span className="market-price-marker" style={{ left: `${Math.max(0, Math.min(100, currentPrice / Math.max(currentPrice, summaryScenario.averagePrice) * 100))}%` }} />
@@ -1160,8 +1241,17 @@ export default function App() {
                             : " Harga pasar masih di atas target MOS."
                           : " Isi Margin of Safety untuk melihat target harga beli."}
                       </p>
-                    </section>
-                  )}
+                      </>
+                    ) : (
+                      <p className="section-subtitle">Isi "Harga Saham Saat Ini" pada halaman Kalkulator untuk membandingkan harga pasar dengan nilai wajar.</p>
+                    )}
+                  </section>
+
+                  <DividendCalculator
+                    scenario={summaryScenario}
+                    name={activeStock.name}
+                    holding={activeStock.holding}
+                  />
 
                   <section className="card scenario-lab">
                     <div className="scenario-lab-heading">
@@ -1212,16 +1302,24 @@ export default function App() {
                   {/* Chart */}
                   <ComparisonChart scenarios={scenarios} currentPrice={currentPrice} />
 
+                  <ComparisonChart scenarios={scenarios} currentPrice={currentPrice} />
+
                   <StockComparisonTable stocks={namedStocks} onOpen={openStockCalculation} />
+                  </>
+                  )}
 
-                  <PortfolioTracker stocks={namedStocks} onOpen={openStockCalculation} />
+                  {activePage === "portofolio" && (
+                    <PortfolioTracker stocks={namedStocks} onOpen={openStockCalculation} />
+                  )}
 
+                  {activePage === "hasil" && (
+                  <>
                   <div className="card result-actions">
                     <button type="button" className="action-btn flex-1" onClick={saveActiveHistory} disabled={!canCalculate || !scenarios.length}>
                       <BookmarkPlus size={16} />
                       Simpan riwayat
                     </button>
-                    <button type="button" className="action-btn-secondary" onClick={() => setHistoryOpen((open) => !open)}>
+                    <button type="button" className="action-btn-secondary" onClick={() => setActivePage("riwayat")}>
                       <History size={16} />
                       Buka riwayat
                     </button>
@@ -1260,11 +1358,13 @@ export default function App() {
                       </div>
                     </div>
                   )}
+                  </>
+                  )}
                 </>
               )}
             </div>
           </div>
-        )}
+        ))}
       </main>
 
       <footer className="footer">
