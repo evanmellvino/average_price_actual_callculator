@@ -1,39 +1,42 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Segoe UI", Roboto, "Helvetica Neue", Arial, ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Calibre', 'Inter', 'Satoshi', 'General Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 :root {
   font-family: var(--font-sans);
   color-scheme: dark;
-  --page: #0d1117;
-  --page-elevated: #161b22;
-  --card: #161b22;
-  --card-hover: #1c2128;
-  --text: #e6edf3;
-  --text-muted: #8b949e;
-  --text-accent: #2f81f7;
-  --text-blue: #79c0ff;
-  --text-amber: #d29922;
-  --text-red: #f85149;
-  --text-positive: #3fb950;
-  --border: #30363d;
-  --input-bg: #0d1117;
+  /* Fey color tokens */
+  --page: #0b0b0b;
+  --page-elevated: #131313;
+  --card: #191919;
+  --card-hover: #1f1f1f;
+  --text: #ffffff;
+  --text-muted: #868f97;
+  --text-accent: #479ffa;
+  --text-blue: #479ffa;
+  --text-amber: #ffa16c;
+  --text-red: #f04848;
+  --text-positive: #4ebe96;
+  --border: #525252;
+  --border-subtle: #2a2a2a;
+  --input-bg: #131313;
   --input-text: #ffffff;
-  --input-border: #30363d;
-  --input-focus: #2f81f7;
-  --header-bg: #161b22;
-  --btn-primary: #2f81f7;
-  --btn-primary-hover: #1f6feb;
-  --btn-secondary: #21262d;
-  --btn-secondary-hover: #30363d;
-  --highlight: #161b22;
-  --danger: #2d1717;
-  --info: #161b22;
-  --shadow: rgba(0, 0, 0, 0.28);
-  --chart-grid: #30363d;
-  --chart-cursor: rgba(139, 148, 158, 0.08);
+  --input-border: #525252;
+  --input-focus: #479ffa;
+  --header-bg: #0b0b0b;
+  --btn-primary: transparent;
+  --btn-primary-hover: rgba(255,255,255,0.06);
+  --btn-secondary: #131313;
+  --btn-secondary-hover: #1f1f1f;
+  --highlight: #131313;
+  --danger: #1a0a0a;
+  --info: #131313;
+  --shadow: rgba(0, 0, 0, 0.8);
+  --shadow-md: rgba(255, 255, 255, 0.25) 0px 0px 14px 0px;
+  --chart-grid: #2a2a2a;
+  --chart-cursor: rgba(134, 143, 151, 0.08);
 }
 
 * {
@@ -56,63 +59,65 @@ body {
 }
 
 .app-shell.theme-dark {
-  --page: #0d1117;
-  --page-elevated: #161b22;
-  --card: #161b22;
-  --card-hover: #1c2128;
-  --text: #e6edf3;
-  --text-muted: #8b949e;
-  --text-accent: #2f81f7;
-  --text-blue: #79c0ff;
-  --text-amber: #d29922;
-  --text-red: #f85149;
-  --text-positive: #3fb950;
-  --border: #30363d;
-  --input-bg: #0d1117;
+  --page: #0b0b0b;
+  --page-elevated: #131313;
+  --card: #191919;
+  --card-hover: #1f1f1f;
+  --text: #ffffff;
+  --text-muted: #868f97;
+  --text-accent: #479ffa;
+  --text-blue: #479ffa;
+  --text-amber: #ffa16c;
+  --text-red: #f04848;
+  --text-positive: #4ebe96;
+  --border: #525252;
+  --border-subtle: #2a2a2a;
+  --input-bg: #131313;
   --input-text: #ffffff;
-  --input-border: #30363d;
-  --input-focus: #2f81f7;
-  --header-bg: #161b22;
-  --btn-primary: #2f81f7;
-  --btn-primary-hover: #1f6feb;
-  --btn-secondary: #21262d;
-  --btn-secondary-hover: #30363d;
-  --highlight: #161b22;
-  --danger: #2d1717;
-  --info: #161b22;
-  --shadow: rgba(0, 0, 0, 0.28);
-  --chart-grid: #30363d;
-  --chart-cursor: rgba(139, 148, 158, 0.08);
+  --input-border: #525252;
+  --input-focus: #479ffa;
+  --header-bg: #0b0b0b;
+  --btn-primary: transparent;
+  --btn-primary-hover: rgba(255,255,255,0.06);
+  --btn-secondary: #131313;
+  --btn-secondary-hover: #1f1f1f;
+  --highlight: #131313;
+  --danger: #1a0a0a;
+  --info: #131313;
+  --shadow: rgba(0, 0, 0, 0.8);
+  --chart-grid: #2a2a2a;
+  --chart-cursor: rgba(134, 143, 151, 0.08);
 }
 
 .app-shell.theme-light {
-  --page: #f6f8fa;
+  --page: #f4f4f4;
   --page-elevated: #ffffff;
   --card: #ffffff;
-  --card-hover: #ffffff;
-  --text: #1f2328;
-  --text-muted: #57606a;
-  --text-accent: #1a7f37;
-  --text-blue: #1a7f37;
-  --text-amber: #9a6700;
-  --text-red: #cf222e;
-  --text-positive: #1a7f37;
-  --border: #d0d7de;
+  --card-hover: #f9f9f9;
+  --text: #0b0b0b;
+  --text-muted: #525252;
+  --text-accent: #2563eb;
+  --text-blue: #2563eb;
+  --text-amber: #d97706;
+  --text-red: #dc2626;
+  --text-positive: #16a34a;
+  --border: #d1d5db;
+  --border-subtle: #e5e7eb;
   --input-bg: #ffffff;
-  --input-text: #000000;
-  --input-border: #d0d7de;
-  --input-focus: #1a7f37;
+  --input-text: #0b0b0b;
+  --input-border: #d1d5db;
+  --input-focus: #2563eb;
   --header-bg: #ffffff;
-  --btn-primary: #1a7f37;
-  --btn-primary-hover: #116329;
-  --btn-secondary: #f6f8fa;
-  --btn-secondary-hover: #eaeef2;
-  --highlight: #f6f8fa;
-  --danger: #fff1f0;
-  --info: #f6f8fa;
-  --shadow: rgba(22, 34, 54, 0.08);
-  --chart-grid: #d0d7de;
-  --chart-cursor: rgba(31, 35, 40, 0.05);
+  --btn-primary: transparent;
+  --btn-primary-hover: rgba(0,0,0,0.04);
+  --btn-secondary: #f4f4f4;
+  --btn-secondary-hover: #e9e9e9;
+  --highlight: #f4f4f4;
+  --danger: #fef2f2;
+  --info: #f4f4f4;
+  --shadow: rgba(0, 0, 0, 0.08);
+  --chart-grid: #e5e7eb;
+  --chart-cursor: rgba(0, 0, 0, 0.04);
 }
 
 /* === Layout utilities === */
@@ -976,11 +981,32 @@ body {
   justify-content: center;
   gap: 0.6rem;
   padding: 0.75rem 1rem;
-  border-radius: 0.75rem;
+  border-radius: 99px;
   font-size: 1rem;
-  font-weight: 750;
+  font-weight: 500;
   line-height: 1.2;
   white-space: nowrap;
+}
+
+/* Fey polish: stack controls side-by-side, resting weight, subtle look */
+.stock-control-actions {
+  grid-template-columns: 1fr 1fr;
+}
+.stock-control-actions > button {
+  min-height: 2.65rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  color: var(--text);
+}
+.stock-control-actions > button:hover {
+  background: var(--card-hover);
+  border-color: var(--text-muted);
+  box-shadow: rgba(255, 255, 255, 0.12) 0px 0px 12px;
+}
+@media (max-width: 640px) {
+  .stock-control-actions { grid-template-columns: 1fr; }
 }
 
 .stock-tabs-no-names .tabs-scroll {
@@ -1554,17 +1580,17 @@ body {
   min-height: 100vh;
   place-items: center;
   padding: 1.25rem;
-  background: var(--page, #0b1220);
-  color: var(--text, #f1f5f9);
+  background: var(--page, #0b0b0b);
+  color: var(--text, #ffffff);
 }
 
 .auth-card {
   width: min(100%, 28rem);
   padding: clamp(1.5rem, 5vw, 2.5rem);
-  border: 1px solid var(--border);
-  border-radius: 1.25rem;
-  background: var(--card);
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--border-subtle, #2a2a2a);
+  border-radius: 16px;
+  background: var(--card, #191919);
+  box-shadow: rgba(0, 0, 0, 0.8) 0px 0px 44px;
 }
 
 .auth-brand-icon {
@@ -1573,14 +1599,14 @@ body {
   height: 3rem;
   margin-bottom: 1.4rem;
   place-items: center;
-  border-radius: 0.9rem;
-  background: #2f81f7;
-  color: white;
+  border-radius: 99px;
+  background: var(--text-accent, #479ffa);
+  color: #ffffff;
 }
 
 .auth-brand-name {
   margin: 0 0 0.55rem;
-  color: #79c0ff;
+  color: var(--text-accent, #479ffa);
   font-size: 0.68rem;
   font-weight: 800;
   letter-spacing: 0.12em;
@@ -1589,8 +1615,8 @@ body {
 .auth-card h1 {
   margin: 0.3rem 0 0.5rem;
   font-size: 1.6rem;
-  font-weight: 750;
-  letter-spacing: -0.03em;
+  font-weight: 700;
+  letter-spacing: -0.06em;
 }
 
 .auth-description,
@@ -1638,15 +1664,16 @@ body {
   justify-content: center;
   margin-top: 0.75rem;
   padding-block: 0.75rem;
-  background-color: #2f81f7 !important;
+  background-color: #479ffa !important;
   color: #ffffff !important;
-  border: 1px solid #2f81f7 !important;
-  font-weight: 600 !important;
+  border: 1px solid #479ffa !important;
+  font-weight: 500 !important;
 }
 
 .auth-submit:hover {
-  background-color: #1f6feb !important;
-  border-color: #1f6feb !important;
+  background-color: #2e8bee !important;
+  border-color: #2e8bee !important;
+  box-shadow: rgba(71, 159, 250, 0.35) 0px 0px 18px;
 }
 
 .auth-submit:disabled {
@@ -1665,7 +1692,7 @@ body {
 .auth-message,
 .auth-notice {
   margin: 0.25rem 0;
-  color: #fbbf24;
+  color: var(--text-amber, #ffa16c);
   font-size: 0.8rem;
   line-height: 1.45;
 }
@@ -1680,7 +1707,7 @@ body {
 .auth-switch button {
   border: 0;
   background: transparent;
-  color: #79c0ff;
+  color: var(--text-accent, #479ffa);
   font: inherit;
   font-weight: 700;
   cursor: pointer;
@@ -2488,4 +2515,266 @@ body {
   #results-container {
     width: 100%;
   }
+}
+
+/* ============================================================
+   FEY DESIGN SYSTEM OVERRIDES
+   Nocturnal terminal: pill controls, 16px cards, black halos,
+   tight tracking, signal-only chromatic accents.
+   ============================================================ */
+
+/* --- Pill-shaped interactive controls (99px) --- */
+.action-btn,
+.action-btn-secondary,
+.secondary-btn,
+.header-btn,
+.unit-switch,
+.unit-btn,
+.status-badge,
+.summary-scenario-tag,
+.market-status-pill,
+.watchlist-symbol-button,
+.scenario-chip,
+.stock-tab,
+.account-email,
+.brand-icon {
+  border-radius: 99px !important;
+}
+
+/* Ghost primary button: shape + light, minimal fill */
+.action-btn {
+  background: var(--btn-secondary) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border) !important;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  transition: box-shadow 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.action-btn:hover {
+  background: var(--card-hover) !important;
+  border-color: var(--text-muted) !important;
+  box-shadow: rgba(255, 255, 255, 0.25) 0px 0px 14px;
+}
+
+/* Keep auth-submit luminous like the Fey primary button */
+.auth-submit {
+  border-radius: 99px !important;
+  background: #479ffa !important;
+  color: #ffffff !important;
+  border: 1px solid #479ffa !important;
+  font-weight: 500;
+}
+.auth-submit:hover {
+  background: #2e8bee !important;
+  border-color: #2e8bee !important;
+  box-shadow: rgba(71, 159, 250, 0.35) 0px 0px 18px;
+}
+
+/* --- 16px content cards + deep black halo --- */
+.card,
+.card-compact {
+  border-radius: 16px !important;
+  background: var(--card);
+  border: 1px solid var(--border-subtle) !important;
+  box-shadow: rgba(0, 0, 0, 0.8) 0px 0px 44px !important;
+  backdrop-filter: none;
+}
+
+.card:hover {
+  transform: none;
+  border-color: var(--border) !important;
+  box-shadow: rgba(0, 0, 0, 0.8) 0px 0px 44px !important;
+}
+
+/* --- Typography: tight tracking on display sizes --- */
+.brand-title,
+.page-intro h2,
+.results-title,
+.summary-title,
+.chart-title,
+.workspace-tools-title,
+.watchlist-reason-modal h2,
+.market-comparison-heading h3,
+.watchlist-heading-row h3,
+.watchlist-compare-heading h4 {
+  letter-spacing: -0.045em;
+}
+
+.page-intro h2 {
+  font-weight: 700;
+  letter-spacing: -0.06em;
+}
+
+.average-price-amount,
+.fv-value,
+.summary-metric strong,
+.market-price-labels strong,
+.metric-value {
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Signal-only chromatic accents --- */
+.section-title {
+  color: var(--text) !important;
+}
+.page-intro h2 span {
+  color: var(--text-accent);
+}
+
+/* Positive / negative semantics on Fey palette */
+.status-positive,
+.summary-positive strong,
+.summary-positive.market-status-pill {
+  color: var(--text-positive);
+}
+.status-negative,
+.summary-negative strong,
+.summary-negative.market-status-pill {
+  color: var(--text-red);
+}
+.status-badge.status-positive,
+.market-status-pill.summary-positive {
+  background: color-mix(in srgb, var(--text-positive) 16%, transparent) !important;
+  border-color: color-mix(in srgb, var(--text-positive) 40%, transparent) !important;
+}
+.status-badge.status-negative,
+.market-status-pill.summary-negative {
+  background: color-mix(in srgb, var(--text-red) 16%, transparent) !important;
+  border-color: color-mix(in srgb, var(--text-red) 40%, transparent) !important;
+}
+
+/* --- Header dark band, no hard elevation --- */
+.app-header {
+  background: var(--header-bg);
+  border-color: var(--border-subtle);
+}
+
+/* --- Charts on Fey grid --- */
+.chart-card {
+  border-radius: 16px !important;
+}
+
+/* --- Inputs: obsidian surface, subtle border --- */
+.input-field,
+.select-field {
+  border-radius: 12px;
+  background: var(--input-bg);
+  border-color: var(--input-border);
+}
+.input-field:focus,
+.select-field:focus {
+  border-color: var(--input-focus);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--input-focus) 22%, transparent);
+}
+
+/* --- Active unit / tab: signal underline instead of fill --- */
+.unit-btn.active {
+  background: var(--card-hover) !important;
+  color: var(--text) !important;
+  box-shadow: inset 0 -1px 0 0 var(--text-accent);
+}
+.stock-tab.active {
+  background: var(--card-hover) !important;
+  border-color: var(--border) !important;
+  box-shadow: inset 0 -1px 0 0 var(--text-accent);
+}
+
+/* ============================================================
+   FEY POLISH — contrast, resting controls, rhythm
+   ============================================================ */
+
+/* --- Muted text: lift off near-black for WCAG comfort --- */
+:root,
+.app-shell.theme-dark {
+  --text-muted: #9aa4ad;
+}
+
+.brand-subtitle,
+.page-intro p:last-child,
+.section-subtitle,
+.results-subtitle,
+.chart-subtitle,
+.chart-footnote,
+.optional-label,
+.market-comparison-note,
+.watchlist-compare-note,
+.auth-security-note,
+.summary-metric span,
+.metric-label,
+.per-saham-label,
+.detail-label {
+  color: var(--text-muted);
+}
+
+/* --- Inputs: clearer border + placeholder --- */
+.input-field::placeholder,
+.auth-form .input-field::placeholder {
+  color: color-mix(in srgb, var(--text-muted) 80%, transparent);
+}
+.input-field,
+.select-field {
+  border-color: #3a3a3a;
+}
+.input-field:hover,
+.select-field:hover {
+  border-color: #4a4a4a;
+}
+
+/* --- Section eyebrows / kicker: signal accent, tighter --- */
+.summary-eyebrow,
+.page-kicker {
+  color: var(--text-accent);
+  letter-spacing: 0.14em;
+  font-size: 0.66rem;
+}
+
+/* --- Cards: quieter resting border, halo only --- */
+.card,
+.card-compact {
+  border-color: var(--border-subtle) !important;
+}
+
+/* --- Results: emphasize the money numbers --- */
+.average-price-amount,
+.avg-value,
+.fv-value,
+.summary-fair-value strong {
+  letter-spacing: -0.04em;
+  font-weight: 700;
+}
+
+/* --- Workspace tools card: align heading row --- */
+.workspace-tools-heading {
+  align-items: center;
+}
+
+/* --- Disclaimer: Fey ember signal, not fire-engine red --- */
+.disclaimer {
+  background: color-mix(in srgb, var(--text-red) 10%, transparent) !important;
+  border-color: color-mix(in srgb, var(--text-red) 35%, transparent) !important;
+  color: #ff8f8f !important;
+  border-radius: 12px;
+}
+
+/* --- Footer: dim, unobtrusive --- */
+.footer {
+  color: var(--text-muted);
+  border-color: var(--border-subtle);
+  font-size: 0.72rem;
+}
+
+/* --- Secondary buttons: resting ghost, clearer hover --- */
+.action-btn-secondary,
+.secondary-btn {
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  color: var(--text);
+  font-weight: 500;
+}
+.action-btn-secondary:hover,
+.secondary-btn:hover {
+  background: var(--card-hover);
+  border-color: var(--text-muted);
 }
