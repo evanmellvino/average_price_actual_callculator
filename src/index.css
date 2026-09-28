@@ -3543,7 +3543,7 @@ body {
 }
 @media (prefers-reduced-motion: reduce) {
   .app-shell {
-    animation: none;
+    animation-duration: 60s;
   }
 }
 
@@ -3630,6 +3630,17 @@ body {
 .calculate-button:hover::after {
   animation: fey-shimmer 0.9s ease;
 }
+/* Touch devices have no hover — run an occasional auto sweep instead */
+@keyframes fey-shimmer-auto {
+  0% { transform: translateX(-140%) skewX(-18deg); }
+  55% { transform: translateX(240%) skewX(-18deg); }
+  100% { transform: translateX(240%) skewX(-18deg); }
+}
+@media (hover: none) {
+  .calculate-button::after {
+    animation: fey-shimmer-auto 4s ease-in-out infinite;
+  }
+}
 
 /* --- 5. Table row hover polish --- */
 .comparison-table-el tbody tr,
@@ -3665,18 +3676,23 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .page-enter > *,
+  /* Keep motion subtle but present — do not disable entirely,
+     otherwise devices with "reduce motion" (common on phones) show nothing. */
+  .page-enter > * {
+    animation: fey-fade 0.45s ease both !important;
+  }
   .valuation-factor-bar > span,
   .comparison-score-bar,
   .portfolio-alloc-bar,
   .market-price-fill,
-  .valuation-gauge-fill,
-  .action-btn::after,
-  .calculate-button::after {
-    animation: none !important;
+  .valuation-gauge-fill {
+    animation-duration: 1.4s !important;
   }
-  .stock-tab:hover {
-    transform: none;
-  }
+}
+
+/* Simple fade used as the reduced-motion fallback */
+@keyframes fey-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
