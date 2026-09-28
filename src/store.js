@@ -36,6 +36,7 @@ export const useStore = create(
           thesis: "",
           watchlistReason: "",
           isWatched: false,
+          holding: { lots: "", buyPrice: "", buyDate: "" },
           createdAt: new Date().toISOString(),
         };
         set((state) => ({
@@ -158,7 +159,7 @@ export const useStore = create(
     }),
     {
       name: "calculator-store",
-      version: 6,
+      version: 7,
       migrate: (persistedState) => ({
         ...persistedState,
         activeStockId: persistedState?.stocks?.some((stock) => stock.id === persistedState.activeStockId)
@@ -184,9 +185,15 @@ export const useStore = create(
           thesis: stock.thesis ?? "",
           watchlistReason: stock.watchlistReason ?? "",
           isWatched: stock.isWatched ?? false,
+          holding: {
+            lots: "",
+            buyPrice: "",
+            buyDate: "",
+            ...(stock.holding ?? {}),
+          },
         })),
         history: persistedState?.history ?? [],
-        version: 6,
+        version: 7,
       }),
     }
   )

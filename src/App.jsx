@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useEffect, useRef } from "react";
-import { Calculator, RefreshCw, FileText, Sun, Moon, TrendingUp, Plus, Share2, Download, HelpCircle, History, BookmarkPlus, ShieldCheck, Star, FlaskConical } from "lucide-react";
+import { Calculator, RefreshCw, FileText, Sun, Moon, TrendingUp, Plus, Share2, Download, HelpCircle, History, BookmarkPlus, ShieldCheck, Star, FlaskConical, Briefcase } from "lucide-react";
 import { useStore } from "./store.js";
 import { EXAMPLE_DATA, EMPTY_FORM, parseNumber, validateForm, calculateScenarios, SECTOR_PRESETS } from "./calculator.js";
 import { generateShareURL, parseShareURL, copyToClipboard, exportSummaryAsJPG } from "./exportUtils.js";
@@ -11,6 +11,8 @@ import { ComparisonChart } from "./components/ComparisonChart.jsx";
 import { HistoryPanel } from "./components/HistoryPanel.jsx";
 import { ValuationScore } from "./components/ValuationScore.jsx";
 import { StockComparisonTable } from "./components/StockComparisonTable.jsx";
+import { PortfolioTracker } from "./components/PortfolioTracker.jsx";
+import { DividendCalculator } from "./components/DividendCalculator.jsx";
 import { AuthScreen } from "./components/AuthScreen.jsx";
 import { ExportSummary } from "./components/ExportSummary.jsx";
 import { hasSupabaseConfig, supabase } from "./lib/supabase.js";
@@ -929,6 +931,41 @@ export default function App() {
               </section>
 
               <section className="card">
+                <h2 className="section-title">
+                  <Briefcase size={18} />
+                  Posisi saya (opsional)
+                </h2>
+                <p className="section-subtitle mb-3">
+                  Isi kalau saham ini sudah Anda miliki, supaya P/L &amp; alokasi portofolio terhitung otomatis.
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <NumericField
+                    label="Jumlah Lot"
+                    tooltip="1 lot = 100 lembar"
+                    value={activeStock.holding?.lots ?? ""}
+                    onChange={(val) => updateStock(activeStockId, { holding: { ...(activeStock.holding ?? {}), lots: val } })}
+                    suffix="lot"
+                  />
+                  <NumericField
+                    label="Harga Beli Rata-rata"
+                    tooltip="Harga beli per lembar"
+                    value={activeStock.holding?.buyPrice ?? ""}
+                    onChange={(val) => updateStock(activeStockId, { holding: { ...(activeStock.holding ?? {}), buyPrice: val } })}
+                    suffix="Rp/lembar"
+                  />
+                  <label className="field-wrap">
+                    <span className="field-label">Tanggal beli</span>
+                    <input
+                      type="date"
+                      className="input-field"
+                      value={activeStock.holding?.buyDate ?? ""}
+                      onChange={(e) => updateStock(activeStockId, { holding: { ...(activeStock.holding ?? {}), buyDate: e.target.value } })}
+                    />
+                  </label>
+                </div>
+              </section>
+
+              <section className="card">
                 <h2 className="section-title">Margin of Safety</h2>
                 <p className="section-subtitle mb-3">
                   Tentukan diskon dari Average Price untuk mendapatkan batas harga beli.
@@ -1090,6 +1127,12 @@ export default function App() {
 
                   <ValuationScore scenario={summaryScenario} currentPrice={currentPrice} />
 
+                  <DividendCalculator
+                    scenario={summaryScenario}
+                    name={activeStock.name}
+                    holding={activeStock.holding}
+                  />
+
                   {marketComparison && (
                     <section className="market-comparison card">
                       <div className="market-comparison-heading">
@@ -1170,6 +1213,8 @@ export default function App() {
                   <ComparisonChart scenarios={scenarios} currentPrice={currentPrice} />
 
                   <StockComparisonTable stocks={namedStocks} onOpen={openStockCalculation} />
+
+                  <PortfolioTracker stocks={namedStocks} onOpen={openStockCalculation} />
 
                   <div className="card result-actions">
                     <button type="button" className="action-btn flex-1" onClick={saveActiveHistory} disabled={!canCalculate || !scenarios.length}>
