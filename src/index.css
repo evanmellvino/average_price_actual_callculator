@@ -164,8 +164,18 @@ body {
 /* === Header === */
 .app-header {
   @apply sticky top-0 z-40 backdrop-blur-xl border-b;
-  background: var(--header-bg);
-  border-color: var(--border);
+  background: color-mix(in srgb, var(--header-bg) 82%, transparent);
+  border-color: var(--border-subtle);
+}
+.app-header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 161, 108, 0.5), transparent);
+  pointer-events: none;
 }
 
 .header-inner {
@@ -2909,4 +2919,68 @@ body {
 .per-saham-item,
 .watchlist-item {
   border-radius: 10px;
+}
+
+/* ============================================================
+   FEY ATMOSPHERE 2 — dashboard vitality
+   ============================================================ */
+
+/* Stronger, higher ember glow so it reads past the sticky header */
+.app-shell {
+  background:
+    radial-gradient(900px 480px at 20% -8%, rgba(255, 138, 61, 0.16), transparent 58%),
+    radial-gradient(700px 420px at 92% -4%, rgba(255, 161, 108, 0.10), transparent 55%),
+    radial-gradient(900px 700px at 60% 115%, rgba(78, 190, 150, 0.05), transparent 60%),
+    var(--page);
+  background-attachment: fixed;
+}
+.app-shell.theme-light {
+  background:
+    radial-gradient(900px 480px at 20% -8%, rgba(217, 102, 43, 0.12), transparent 58%),
+    radial-gradient(700px 420px at 92% -4%, rgba(217, 102, 43, 0.07), transparent 55%),
+    var(--page);
+  background-attachment: fixed;
+}
+
+/* Hero intro: give the headline its own warm halo */
+.page-intro {
+  position: relative;
+}
+.page-intro::before {
+  content: "";
+  position: absolute;
+  inset: -1rem -0.5rem;
+  background: radial-gradient(520px 200px at 12% 40%, rgba(255, 161, 108, 0.10), transparent 70%);
+  z-index: -1;
+  pointer-events: none;
+  border-radius: 24px;
+}
+
+/* Cards: subtle glassy top highlight + inner ember rim */
+.card,
+.card-compact {
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 40%),
+    var(--card);
+}
+.card::before,
+.card-compact::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  border-radius: 16px 16px 0 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 161, 108, 0.35), transparent);
+  opacity: 0.6;
+  pointer-events: none;
+}
+.card:hover::before {
+  opacity: 1;
+}
+
+/* Emphasized result cards get a stronger ember edge */
+.avg-price-card,
+.fair-value-grid .fv-card {
+  border-color: color-mix(in srgb, var(--text-accent) 30%, var(--border-subtle)) !important;
 }
