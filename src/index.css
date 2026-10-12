@@ -36,7 +36,7 @@
   --highlight: #131313;
   --danger: #1a0a0a;
   --info: #131313;
-  --shadow: rgba(0, 0, 0, 0.8);
+  --shadow: rgba(0, 0, 0, 0.45);
   --shadow-md: rgba(255, 255, 255, 0.25) 0px 0px 14px 0px;
   --chart-grid: #2a2a2a;
   --chart-cursor: rgba(134, 143, 151, 0.08);
@@ -100,7 +100,7 @@ body {
   --highlight: #131313;
   --danger: #1a0a0a;
   --info: #131313;
-  --shadow: rgba(0, 0, 0, 0.8);
+  --shadow: rgba(0, 0, 0, 0.45);
   --chart-grid: #2a2a2a;
   --chart-cursor: rgba(134, 143, 151, 0.08);
 }
@@ -322,7 +322,7 @@ body {
   background: var(--card);
   border: 1px solid var(--border);
   backdrop-filter: blur(8px);
-  box-shadow: 0 12px 36px var(--shadow);
+  box-shadow: 0 6px 18px -8px var(--shadow);
   transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
   border-radius: 1.1rem;
 }
@@ -330,7 +330,7 @@ body {
 .card:hover {
   transform: translateY(-1px);
   border-color: var(--input-border);
-  box-shadow: 0 16px 42px var(--shadow);
+  box-shadow: 0 10px 24px -10px var(--shadow);
 }
 
 .card-compact {
@@ -1626,7 +1626,7 @@ body {
   border: 1px solid var(--border-subtle, #2a2a2a);
   border-radius: 16px;
   background: var(--card, #191919);
-  box-shadow: rgba(0, 0, 0, 0.8) 0px 0px 44px;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 8px 28px -12px;
 }
 
 .auth-brand-icon {
@@ -3765,7 +3765,7 @@ body {
   --glow-accent: rgba(217, 102, 43, 0.18);
 }
 
-/* --- Cards: glassy, light-catcher top edge, stronger halo --- */
+/* --- Cards: glassy, light-catcher top edge, soft halo --- */
 .card {
   position: relative;
   background:
@@ -3774,23 +3774,22 @@ body {
   border: 1px solid var(--border-subtle);
   box-shadow:
     0 1px 0 0 var(--glass-edge) inset,
-    0 18px 44px -18px rgba(0, 0, 0, 0.7);
+    0 6px 20px -12px rgba(0, 0, 0, 0.5);
 }
 .card:hover {
-  border-color: color-mix(in srgb, var(--text-accent) 26%, var(--border-subtle));
+  border-color: color-mix(in srgb, var(--text-accent) 22%, var(--border-subtle));
   box-shadow:
     0 1px 0 0 var(--glass-edge) inset,
-    0 22px 54px -18px rgba(0, 0, 0, 0.75),
-    0 0 0 1px color-mix(in srgb, var(--text-accent) 12%, transparent);
+    0 10px 26px -14px rgba(0, 0, 0, 0.55);
 }
 
 /* --- Header: stronger brand presence --- */
 .app-header {
   background: color-mix(in srgb, var(--header-bg) 72%, transparent);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03), 0 8px 30px -20px rgba(0, 0, 0, 0.9);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03), 0 6px 20px -18px rgba(0, 0, 0, 0.7);
 }
 .brand-icon {
-  filter: drop-shadow(0 4px 14px var(--glow-accent));
+  filter: drop-shadow(0 3px 10px color-mix(in srgb, var(--glow-accent) 60%, transparent));
 }
 .brand-title {
   letter-spacing: -0.02em;
@@ -3803,7 +3802,6 @@ body {
 /* --- Page nav: refined pill rail --- */
 .page-nav {
   background: color-mix(in srgb, var(--header-bg) 68%, transparent);
-  box-shadow: 0 8px 30px -24px rgba(0, 0, 0, 0.9) inset;
 }
 .page-nav-item {
   border: 1px solid transparent;
@@ -3816,18 +3814,17 @@ body {
 .avg-price-card,
 .valuation-summary {
   background:
-    radial-gradient(120% 120% at 50% 0%, color-mix(in srgb, var(--text-accent) 10%, transparent), transparent 58%),
+    radial-gradient(120% 120% at 50% 0%, color-mix(in srgb, var(--text-accent) 8%, transparent), transparent 60%),
     linear-gradient(180deg, var(--glass-top), transparent 40%),
     var(--card);
-  border: 1px solid color-mix(in srgb, var(--text-accent) 24%, var(--border-subtle));
+  border: 1px solid color-mix(in srgb, var(--text-accent) 20%, var(--border-subtle));
   box-shadow:
     0 1px 0 0 var(--glass-edge) inset,
-    0 24px 60px -24px var(--glow-accent),
-    0 18px 44px -20px rgba(0, 0, 0, 0.8);
+    0 8px 24px -14px rgba(0, 0, 0, 0.5);
 }
 .average-price-amount,
 .avg-value {
-  text-shadow: 0 0 34px var(--glow-accent);
+  text-shadow: 0 0 20px color-mix(in srgb, var(--glow-accent) 55%, transparent);
 }
 
 /* --- Metrics: lift slightly and tint the moat --- */
@@ -3879,12 +3876,12 @@ body {
   font-weight: 700 !important;
   box-shadow:
     0 1px 0 0 rgba(255, 255, 255, 0.35) inset,
-    0 16px 40px -14px var(--glow-accent);
+    0 8px 20px -10px color-mix(in srgb, var(--glow-accent) 70%, transparent);
 }
 .calculate-button:hover:not(:disabled) {
   box-shadow:
     0 1px 0 0 rgba(255, 255, 255, 0.4) inset,
-    0 20px 50px -14px var(--glow-accent);
+    0 10px 24px -10px color-mix(in srgb, var(--glow-accent) 85%, transparent);
 }
 .calculate-button:disabled {
   background: color-mix(in srgb, var(--text-accent) 22%, var(--card)) !important;
@@ -3925,21 +3922,20 @@ body {
   background-clip: content-box;
 }
 
-/* --- Login: premium card with gradient edge + glow --- */
+/* --- Login: premium card with gradient edge + soft glow --- */
 .auth-card {
   position: relative;
   background:
-    radial-gradient(120% 90% at 50% -10%, color-mix(in srgb, var(--text-accent) 12%, transparent), transparent 60%),
+    radial-gradient(120% 90% at 50% -10%, color-mix(in srgb, var(--text-accent) 10%, transparent), transparent 60%),
     linear-gradient(180deg, var(--glass-top), transparent 45%),
     var(--card);
-  border: 1px solid color-mix(in srgb, var(--text-accent) 20%, var(--border-subtle));
+  border: 1px solid color-mix(in srgb, var(--text-accent) 18%, var(--border-subtle));
   box-shadow:
     0 1px 0 0 var(--glass-edge) inset,
-    0 30px 80px -30px var(--glow-accent),
-    0 24px 60px -28px rgba(0, 0, 0, 0.85);
+    0 14px 40px -24px rgba(0, 0, 0, 0.6);
 }
 .auth-brand-icon img {
-  filter: drop-shadow(0 6px 20px var(--glow-accent));
+  filter: drop-shadow(0 4px 14px color-mix(in srgb, var(--glow-accent) 60%, transparent));
 }
 
 /* --- Section cards on the kalkulator: subtle numbered rail --- */
