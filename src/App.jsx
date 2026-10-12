@@ -913,7 +913,7 @@ export default function App() {
             </button>
           </div>
         ) : (
-          <div className={`grid-form-results ${activePage === "kalkulator" ? "" : "grid-single-page"}`}>
+          <div className="grid-form-results grid-single-page">
             {/* LEFT: Input Form — Kalkulator page only */}
             <div className={`page-enter ${activePage === "kalkulator" ? "" : "hidden-page"}`}>
               {/* Step 1: Laba */}

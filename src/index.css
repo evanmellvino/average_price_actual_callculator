@@ -144,6 +144,7 @@ body {
   gap: 1.5rem;
 }
 
+
 .grid-form-results {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
@@ -3745,4 +3746,235 @@ body {
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+/* ============================================================
+   PREMIUM POLISH — depth, light, hierarchy
+   Keeps the near-black Fey canvas but adds glass surfaces,
+   light-catching borders, glows, and a clear focal point.
+   ============================================================ */
+
+/* Shared premium surfaces */
+.app-shell {
+  --glass-top: rgba(255, 255, 255, 0.045);
+  --glass-edge: rgba(255, 255, 255, 0.08);
+  --glow-accent: rgba(255, 161, 108, 0.22);
+}
+.app-shell.theme-light {
+  --glass-top: rgba(255, 255, 255, 0.6);
+  --glass-edge: rgba(0, 0, 0, 0.06);
+  --glow-accent: rgba(217, 102, 43, 0.18);
+}
+
+/* --- Cards: glassy, light-catcher top edge, stronger halo --- */
+.card {
+  position: relative;
+  background:
+    linear-gradient(180deg, var(--glass-top), transparent 42%),
+    var(--card);
+  border: 1px solid var(--border-subtle);
+  box-shadow:
+    0 1px 0 0 var(--glass-edge) inset,
+    0 18px 44px -18px rgba(0, 0, 0, 0.7);
+}
+.card:hover {
+  border-color: color-mix(in srgb, var(--text-accent) 26%, var(--border-subtle));
+  box-shadow:
+    0 1px 0 0 var(--glass-edge) inset,
+    0 22px 54px -18px rgba(0, 0, 0, 0.75),
+    0 0 0 1px color-mix(in srgb, var(--text-accent) 12%, transparent);
+}
+
+/* --- Header: stronger brand presence --- */
+.app-header {
+  background: color-mix(in srgb, var(--header-bg) 72%, transparent);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03), 0 8px 30px -20px rgba(0, 0, 0, 0.9);
+}
+.brand-icon {
+  filter: drop-shadow(0 4px 14px var(--glow-accent));
+}
+.brand-title {
+  letter-spacing: -0.02em;
+  background: linear-gradient(180deg, var(--text), color-mix(in srgb, var(--text) 72%, transparent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* --- Page nav: refined pill rail --- */
+.page-nav {
+  background: color-mix(in srgb, var(--header-bg) 68%, transparent);
+  box-shadow: 0 8px 30px -24px rgba(0, 0, 0, 0.9) inset;
+}
+.page-nav-item {
+  border: 1px solid transparent;
+}
+.page-nav-item:not(.active):hover {
+  border-color: var(--border-subtle);
+}
+
+/* --- Focal hero: the average-price result --- */
+.avg-price-card,
+.valuation-summary {
+  background:
+    radial-gradient(120% 120% at 50% 0%, color-mix(in srgb, var(--text-accent) 10%, transparent), transparent 58%),
+    linear-gradient(180deg, var(--glass-top), transparent 40%),
+    var(--card);
+  border: 1px solid color-mix(in srgb, var(--text-accent) 24%, var(--border-subtle));
+  box-shadow:
+    0 1px 0 0 var(--glass-edge) inset,
+    0 24px 60px -24px var(--glow-accent),
+    0 18px 44px -20px rgba(0, 0, 0, 0.8);
+}
+.average-price-amount,
+.avg-value {
+  text-shadow: 0 0 34px var(--glow-accent);
+}
+
+/* --- Metrics: lift slightly and tint the moat --- */
+.summary-metric,
+.per-saham-item,
+.metric-item {
+  background: color-mix(in srgb, var(--page-elevated) 88%, transparent);
+  border: 1px solid var(--border-subtle);
+  transition: border-color 0.18s ease, background 0.18s ease;
+}
+.summary-metric:hover,
+.metric-item:hover {
+  border-color: color-mix(in srgb, var(--text-accent) 24%, var(--border-subtle));
+}
+.summary-fair-value {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--text-accent) 14%, transparent), transparent),
+    color-mix(in srgb, var(--page-elevated) 88%, transparent);
+  border-color: color-mix(in srgb, var(--text-accent) 30%, var(--border-subtle));
+}
+
+/* --- Inputs: focus glow --- */
+.input-field {
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+.input-field:hover {
+  border-color: color-mix(in srgb, var(--text-accent) 30%, var(--input-border));
+}
+.input-field:focus,
+.input-field:focus-visible {
+  border-color: var(--input-focus);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--input-focus) 20%, transparent),
+    0 0 22px -6px var(--glow-accent);
+}
+
+/* --- Numbered section titles: accent chip --- */
+.section-title {
+  letter-spacing: -0.01em;
+}
+.section-title svg {
+  color: var(--text-accent);
+}
+
+/* --- Primary calculate button: premium gradient --- */
+.calculate-button {
+  background: linear-gradient(135deg, var(--text-accent), #ff8a4d) !important;
+  color: #1a0f08 !important;
+  border: 1px solid transparent !important;
+  font-weight: 700 !important;
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.35) inset,
+    0 16px 40px -14px var(--glow-accent);
+}
+.calculate-button:hover:not(:disabled) {
+  box-shadow:
+    0 1px 0 0 rgba(255, 255, 255, 0.4) inset,
+    0 20px 50px -14px var(--glow-accent);
+}
+.calculate-button:disabled {
+  background: color-mix(in srgb, var(--text-accent) 22%, var(--card)) !important;
+  color: color-mix(in srgb, #1a0f08 60%, transparent) !important;
+  box-shadow: none;
+}
+
+/* --- Eyebrows: crisper accent rule --- */
+.summary-eyebrow,
+.page-kicker {
+  position: relative;
+}
+
+/* --- Empty states: softer --- */
+.card.p-8.text-center {
+  background:
+    linear-gradient(180deg, var(--glass-top), transparent 45%),
+    var(--card);
+}
+
+/* --- Scrollbar refinement (desktop) --- */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--text-accent) 30%, transparent) transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--text-accent) 26%, transparent);
+  border-radius: 99px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--text-accent) 45%, transparent);
+  background-clip: content-box;
+}
+
+/* --- Login: premium card with gradient edge + glow --- */
+.auth-card {
+  position: relative;
+  background:
+    radial-gradient(120% 90% at 50% -10%, color-mix(in srgb, var(--text-accent) 12%, transparent), transparent 60%),
+    linear-gradient(180deg, var(--glass-top), transparent 45%),
+    var(--card);
+  border: 1px solid color-mix(in srgb, var(--text-accent) 20%, var(--border-subtle));
+  box-shadow:
+    0 1px 0 0 var(--glass-edge) inset,
+    0 30px 80px -30px var(--glow-accent),
+    0 24px 60px -28px rgba(0, 0, 0, 0.85);
+}
+.auth-brand-icon img {
+  filter: drop-shadow(0 6px 20px var(--glow-accent));
+}
+
+/* --- Section cards on the kalkulator: subtle numbered rail --- */
+.grid-form-results > div:first-child > .card {
+  border-top: 2px solid color-mix(in srgb, var(--text-accent) 40%, transparent);
+}
+
+/* --- Table polish: header + row rhythm --- */
+.comparison-table-el thead th,
+.portfolio-table thead th,
+.dividend-table thead th,
+.watchlist-table thead th {
+  background: color-mix(in srgb, var(--page-elevated) 90%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--text-accent) 16%, var(--border-subtle));
+}
+
+/* --- Tighter page rhythm: reduce dead space above content --- */
+.container-main {
+  gap: 1.15rem;
+}
+.page-intro {
+  padding: 0.35rem 0 0.1rem;
+}
+.page-intro h2 {
+  line-height: 1.05;
+}
+.page-intro p:last-child {
+  margin-top: 0.4rem;
+}
+.disclaimer {
+  padding-block: 0.7rem;
+}
+.stock-controls {
+  margin: 0;
+}
+
+
 
