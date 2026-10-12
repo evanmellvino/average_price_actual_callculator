@@ -36,7 +36,7 @@
   --highlight: #131313;
   --danger: #1a0a0a;
   --info: #131313;
-  --shadow: rgba(0, 0, 0, 0.45);
+  --shadow: rgba(0, 0, 0, 0.22);
   --shadow-md: rgba(255, 255, 255, 0.25) 0px 0px 14px 0px;
   --chart-grid: #2a2a2a;
   --chart-cursor: rgba(134, 143, 151, 0.08);
@@ -100,7 +100,7 @@ body {
   --highlight: #131313;
   --danger: #1a0a0a;
   --info: #131313;
-  --shadow: rgba(0, 0, 0, 0.45);
+  --shadow: rgba(0, 0, 0, 0.22);
   --chart-grid: #2a2a2a;
   --chart-cursor: rgba(134, 143, 151, 0.08);
 }
@@ -322,7 +322,7 @@ body {
   background: var(--card);
   border: 1px solid var(--border);
   backdrop-filter: blur(8px);
-  box-shadow: 0 6px 18px -8px var(--shadow);
+  box-shadow: none;
   transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
   border-radius: 1.1rem;
 }
@@ -330,7 +330,7 @@ body {
 .card:hover {
   transform: translateY(-1px);
   border-color: var(--input-border);
-  box-shadow: 0 10px 24px -10px var(--shadow);
+  box-shadow: none;
 }
 
 .card-compact {
@@ -1035,7 +1035,7 @@ body {
 .stock-control-actions > button:hover {
   background: var(--card-hover);
   border-color: var(--text-muted);
-  box-shadow: rgba(255, 255, 255, 0.12) 0px 0px 12px;
+  box-shadow: none;
 }
 @media (max-width: 640px) {
   .stock-control-actions { grid-template-columns: 1fr; }
@@ -1626,7 +1626,7 @@ body {
   border: 1px solid var(--border-subtle, #2a2a2a);
   border-radius: 16px;
   background: var(--card, #191919);
-  box-shadow: rgba(0, 0, 0, 0.4) 0px 8px 28px -12px;
+  box-shadow: none;
 }
 
 .auth-brand-icon {
@@ -1714,7 +1714,7 @@ body {
 .auth-submit:hover {
   background-color: #ff8a4d !important;
   border-color: #ff8a4d !important;
-  box-shadow: rgba(255, 161, 108, 0.35) 0px 0px 18px;
+  box-shadow: none;
 }
 
 .auth-submit:disabled {
@@ -2644,7 +2644,7 @@ body {
 .action-btn:hover {
   background: var(--card-hover) !important;
   border-color: var(--text-muted) !important;
-  box-shadow: rgba(255, 255, 255, 0.25) 0px 0px 14px;
+  box-shadow: none;
 }
 
 /* Keep auth-submit luminous like the Fey primary button */
@@ -2658,23 +2658,23 @@ body {
 .auth-submit:hover {
   background: #ff8a4d !important;
   border-color: #ff8a4d !important;
-  box-shadow: rgba(255, 161, 108, 0.35) 0px 0px 18px;
+  box-shadow: none;
 }
 
-/* --- 16px content cards + deep black halo --- */
+/* --- 16px content cards, hairline border only --- */
 .card,
 .card-compact {
   border-radius: 16px !important;
   background: var(--card);
   border: 1px solid var(--border-subtle) !important;
-  box-shadow: rgba(0, 0, 0, 0.8) 0px 0px 44px !important;
+  box-shadow: none !important;
   backdrop-filter: none;
 }
 
 .card:hover {
   transform: none;
   border-color: var(--border) !important;
-  box-shadow: rgba(0, 0, 0, 0.8) 0px 0px 44px !important;
+  box-shadow: none !important;
 }
 
 /* --- Typography: tight tracking on display sizes --- */
@@ -3531,7 +3531,7 @@ body {
   color: var(--text-dark, #1a0f08);
   background: linear-gradient(135deg, var(--text-accent), var(--text-accent-hover, #ff8a4d));
   border-color: transparent;
-  box-shadow: 0 4px 16px color-mix(in srgb, var(--text-accent) 32%, transparent);
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.2) inset;
 }
 .theme-light .page-nav-item.active {
   color: #fff;
@@ -3765,7 +3765,7 @@ body {
   --glow-accent: rgba(217, 102, 43, 0.18);
 }
 
-/* --- Cards: glassy, light-catcher top edge, soft halo --- */
+/* --- Cards: flat glass, no drop shadow — rely on border + top light edge --- */
 .card {
   position: relative;
   background:
@@ -3774,22 +3774,22 @@ body {
   border: 1px solid var(--border-subtle);
   box-shadow:
     0 1px 0 0 var(--glass-edge) inset,
-    0 6px 20px -12px rgba(0, 0, 0, 0.5);
+    0 1px 2px -1px rgba(0, 0, 0, 0.35);
 }
 .card:hover {
   border-color: color-mix(in srgb, var(--text-accent) 22%, var(--border-subtle));
   box-shadow:
     0 1px 0 0 var(--glass-edge) inset,
-    0 10px 26px -14px rgba(0, 0, 0, 0.55);
+    0 2px 4px -2px rgba(0, 0, 0, 0.4);
 }
 
-/* --- Header: stronger brand presence --- */
+/* --- Header: no shadow, hairline only --- */
 .app-header {
   background: color-mix(in srgb, var(--header-bg) 72%, transparent);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03), 0 6px 20px -18px rgba(0, 0, 0, 0.7);
+  box-shadow: none;
 }
 .brand-icon {
-  filter: drop-shadow(0 3px 10px color-mix(in srgb, var(--glow-accent) 60%, transparent));
+  filter: drop-shadow(0 2px 6px color-mix(in srgb, var(--glow-accent) 40%, transparent));
 }
 .brand-title {
   letter-spacing: -0.02em;
@@ -3818,13 +3818,11 @@ body {
     linear-gradient(180deg, var(--glass-top), transparent 40%),
     var(--card);
   border: 1px solid color-mix(in srgb, var(--text-accent) 20%, var(--border-subtle));
-  box-shadow:
-    0 1px 0 0 var(--glass-edge) inset,
-    0 8px 24px -14px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 1px 0 0 var(--glass-edge) inset;
 }
 .average-price-amount,
 .avg-value {
-  text-shadow: 0 0 20px color-mix(in srgb, var(--glow-accent) 55%, transparent);
+  text-shadow: none;
 }
 
 /* --- Metrics: lift slightly and tint the moat --- */
@@ -3868,20 +3866,16 @@ body {
   color: var(--text-accent);
 }
 
-/* --- Primary calculate button: premium gradient --- */
+/* --- Primary calculate button: flat gradient, no halo --- */
 .calculate-button {
   background: linear-gradient(135deg, var(--text-accent), #ff8a4d) !important;
   color: #1a0f08 !important;
   border: 1px solid transparent !important;
   font-weight: 700 !important;
-  box-shadow:
-    0 1px 0 0 rgba(255, 255, 255, 0.35) inset,
-    0 8px 20px -10px color-mix(in srgb, var(--glow-accent) 70%, transparent);
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.25) inset;
 }
 .calculate-button:hover:not(:disabled) {
-  box-shadow:
-    0 1px 0 0 rgba(255, 255, 255, 0.4) inset,
-    0 10px 24px -10px color-mix(in srgb, var(--glow-accent) 85%, transparent);
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.3) inset;
 }
 .calculate-button:disabled {
   background: color-mix(in srgb, var(--text-accent) 22%, var(--card)) !important;
@@ -3922,7 +3916,7 @@ body {
   background-clip: content-box;
 }
 
-/* --- Login: premium card with gradient edge + soft glow --- */
+/* --- Login: glass card with gradient edge, no drop shadow --- */
 .auth-card {
   position: relative;
   background:
@@ -3930,12 +3924,10 @@ body {
     linear-gradient(180deg, var(--glass-top), transparent 45%),
     var(--card);
   border: 1px solid color-mix(in srgb, var(--text-accent) 18%, var(--border-subtle));
-  box-shadow:
-    0 1px 0 0 var(--glass-edge) inset,
-    0 14px 40px -24px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 1px 0 0 var(--glass-edge) inset;
 }
 .auth-brand-icon img {
-  filter: drop-shadow(0 4px 14px color-mix(in srgb, var(--glow-accent) 60%, transparent));
+  filter: drop-shadow(0 2px 8px color-mix(in srgb, var(--glow-accent) 40%, transparent));
 }
 
 /* --- Section cards on the kalkulator: subtle numbered rail --- */
